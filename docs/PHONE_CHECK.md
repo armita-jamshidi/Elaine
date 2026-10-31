@@ -10,7 +10,7 @@ The box uses inline styles with translucent colors, so it follows whatever light
 
 ## The one-time full sync
 
-Adding the Mnemonic field changes the note type's structure, which Anki calls a schema change. The first sync after it has to be a full, one-way sync. The add-on asks before doing it, and this only happens once (and again only if a deck upgrade removes the field; see stage 5).
+Adding the Mnemonic field changes the note type's structure, which Anki calls a schema change. The first sync after it has to be a full, one-way sync. The add-on asks before doing it, and this only happens once (and again only if a deck upgrade removes the field; see the last item below).
 
 ## Walkthrough
 
@@ -19,7 +19,7 @@ You can't do this from the dev copy, because it must stay signed out of your rea
 1. **Back up.** In desktop Anki: File > Export > "Anki Collection Package (.colpkg)", tick "Include media", save it somewhere safe.
 2. **Sync your phone,** so AnkiWeb has every review you've done.
 3. **Sync desktop Anki,** so it has them too.
-4. **Install the add-on in your real Anki** (until the packaged `.ankiaddon` exists in stage 8: `python scripts/link_dev.py "<your Anki2 folder>" --i-backed-up-my-real-collection`), add your Claude key in its config, and restart Anki.
+4. **Install the add-on in your real Anki:** build it with `python scripts/package.py`, double-click `dist/flag_mnemonics-0.1.0.ankiaddon` (or Tools > Add-ons > Install from file), add your Claude key in its config, and restart Anki.
 5. **Generate.** Tools > "Generate mnemonics for struggling flags". When it asks to add the Mnemonic field, read the steps it shows and click Yes.
 6. **Sync desktop Anki.** Anki says a one-way sync is needed. Choose **Upload to AnkiWeb**.
 7. **Sync your phone.** It says the same. Choose **Download from AnkiWeb**.
