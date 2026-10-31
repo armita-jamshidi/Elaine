@@ -27,6 +27,10 @@ class FakeCard:
         self.lapses = lapses
         self._template = template
         self.deck_id = deck_id
+        self.nid = note.id
+
+    def note_type(self):
+        return self._note.note_type()
 
     def note(self):
         return self._note

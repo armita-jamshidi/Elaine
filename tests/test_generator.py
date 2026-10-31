@@ -277,3 +277,12 @@ def test_generator_has_no_anki_imports():
     }
     assert not imported & {"aqt", "anki", "PyQt6"}
     assert all(m in {"__future__", "base64", "json", "re", "time", "urllib", "dataclasses", "typing"} for m in imported), imported
+
+
+def test_regenerate_mentions_the_mnemonic_being_replaced():
+    from flag_mnemonics.generator import FlagInput, build_user_text
+
+    text = build_user_text(FlagInput("Poland", previous="Kramer bursts in."), [])
+    assert "didn't stick: Kramer bursts in." in text
+    assert "different scene" in text
+    assert "didn't stick" not in build_user_text(FlagInput("Poland"), [])
