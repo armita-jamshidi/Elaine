@@ -23,6 +23,7 @@ def _install_fake_aqt() -> None:
     utils = types.ModuleType("aqt.utils")
     utils.showInfo = MagicMock(name="showInfo")
     utils.tooltip = MagicMock(name="tooltip")
+    utils.showWarning = MagicMock(name="showWarning")
 
     gui_hooks = types.ModuleType("aqt.gui_hooks")
     for hook in ("profile_did_open", "sync_did_finish", "reviewer_did_answer_card"):
@@ -55,6 +56,10 @@ class FakeQueryOp:
 
     def failure(self, callback):
         self.on_failure = callback
+        return self
+
+    def without_collection(self):
+        self.no_collection = True
         return self
 
     def run_in_background(self):

@@ -5,7 +5,7 @@ Three triggers feed the same check:
 - after each sync, which picks up misses made on your phone,
 - right after you press Again on a desktop review.
 
-Stage 2 only logs what it finds. Generation is wired in at stage 3.
+What it finds is handed to `pipeline.Pipeline`, which writes the mnemonics.
 
 The search and threshold logic is plain Python so it can be tested without
 Anki. Only `register()` touches `aqt`.
@@ -160,8 +160,8 @@ def get_logger() -> logging.Logger:
 class Catcher:
     """Runs the struggling-card search in the background and reports the result.
 
-    `on_found` is called on the main thread with the de-duplicated notes. In
-    stage 2 it only logs; stage 3 hands the list to the generator.
+    `on_found` is called on the main thread with the de-duplicated notes.
+    By default it only logs; the add-on points it at the generator.
     """
 
     def __init__(
@@ -181,7 +181,7 @@ class Catcher:
         if cards:
             from aqt.utils import tooltip
 
-            tooltip(f"Flag Mnemonics: {len(cards)} struggling flag(s) found (logged, nothing generated yet)")
+            tooltip(f"Flag Mnemonics: {len(cards)} struggling flag(s) found")
 
     def scan(
         self,

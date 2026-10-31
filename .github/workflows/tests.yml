@@ -17,5 +17,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - run: pip install -r requirements-dev.txt
+      # Qt (bundled with Anki) renders SVG flags; install it so that test runs too.
+      - run: sudo apt-get install -y libegl1
+      - run: pip install -r requirements-dev.txt PyQt6
       - run: pytest -v
+        env:
+          QT_QPA_PLATFORM: offscreen

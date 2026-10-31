@@ -35,6 +35,8 @@ class Settings:
     auto_sync_after_generation: bool = False
     claude_api_key: str = ""
     huggingface_api_key: str = ""
+    claude_model: str = "claude-opus-5-5"
+    use_mock_api: bool = False
 
     @classmethod
     def from_config(cls, raw: Mapping[str, Any] | None) -> "Settings":
@@ -79,6 +81,8 @@ class Settings:
             ),
             claude_api_key=str(raw.get("claude_api_key") or ""),
             huggingface_api_key=str(raw.get("huggingface_api_key") or ""),
+            claude_model=str(raw.get("claude_model") or defaults.claude_model),
+            use_mock_api=bool(raw.get("use_mock_api", defaults.use_mock_api)),
         )
 
     def resolved_claude_key(self) -> str:
@@ -100,6 +104,7 @@ class Settings:
                 f"Flag card templates: {', '.join(self.flag_card_templates)}",
                 f"Storage mode: {self.storage_mode}",
                 f"Images: {'on' if self.images_enabled else 'off'}",
+                f"Claude model: {self.claude_model}{' (mock API)' if self.use_mock_api else ''}",
                 f"Claude API key: {claude}",
                 f"Hugging Face key: {hf}",
             ]

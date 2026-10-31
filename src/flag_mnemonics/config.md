@@ -20,6 +20,8 @@ Changes take effect after you restart Anki.
 - `catch_up_after_sync`: Look for struggling flags after each sync, so misses from your phone are picked up. Default `true`.
 - `auto_sync_after_generation`: Sync automatically after new mnemonics are written, instead of reminding you to sync. Default `false`.
 - `claude_api_key`: Your Anthropic API key, from https://console.anthropic.com. If empty, the add-on uses the `ANTHROPIC_API_KEY` environment variable.
+- `claude_model`: The Claude model that writes mnemonics. Default `"claude-opus-5-5"`. Each mnemonic is one short request with a flag image.
+- `use_mock_api`: For development. When `true`, no API calls are made and every mnemonic is a placeholder starting with `[mock]`. Default `false`.
 - `huggingface_api_key`: Your Hugging Face access token, from https://huggingface.co/settings/tokens. Only needed when `images_enabled` is `true`. If empty, the add-on uses the `HF_TOKEN` environment variable.
 
 Your keys are stored only in this add-on's settings on this computer. They are never written to your cards and never synced.
