@@ -45,7 +45,26 @@ This symlinks `src/flag_mnemonics` into `~/AnkiDev/addons21/flag_mnemonics`, so 
 
 **6. Check it loaded.** Start Anki with the dev folder again (step 2). Tools > "Hello from Flag Mnemonics" should show a greeting and the settings it loaded. Tools > Add-ons > Flag Mnemonics > Config opens `config.json` with `config.md` beside it.
 
+## Making some flags "struggle" for testing
+
+The add-on only acts on flag cards with 3 or more lapses. In the dev copy you can fake that from the debug console (Tools > Debug Console, or Ctrl/Cmd+Shift+;). Paste this and press Ctrl/Cmd+Enter:
+
+```python
+countries = ["Poland", "Indonesia", "Monaco", "Chad", "Romania"]
+for country in countries:
+    for cid in mw.col.find_cards(f'deck:"Ultimate Geography" card:"Flag - Country" "Country:{country}"'):
+        card = mw.col.get_card(cid)
+        card.type = card.queue = 2   # make it a review card
+        card.lapses = 3
+        mw.col.update_card(card)
+print("done")
+```
+
+Then use Tools > "Find struggling flags (log only)". It should list those five countries and show the exact search it ran. Restarting Anki or syncing runs the same search automatically and shows a short tooltip. Pressing Again on a flag card that reaches 3 lapses during a desktop review is logged too.
+
 ## Where things live
+
+- The add-on's log is in the dev data folder under `logs/addons/flag_mnemonics/`.
 
 - Your edited settings (including API keys) are saved by Anki to `addons21/flag_mnemonics/meta.json`. Through the symlink, that file sits in `src/flag_mnemonics/`, and `.gitignore` keeps it out of git.
 - The add-on's own data goes in `src/flag_mnemonics/user_files/`, also ignored by git. Anki preserves this folder across add-on updates.

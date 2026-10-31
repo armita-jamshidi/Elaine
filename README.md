@@ -2,7 +2,7 @@
 
 An Anki desktop add-on that writes themed mnemonics (Seinfeld by default) for the flag cards you keep forgetting. Each mnemonic encodes what the flag actually looks like and how it differs from its look-alikes, and it's written into the card itself so it syncs to AnkiMobile and AnkiDroid.
 
-Status: early development (stage 1 of 10, scaffold only).
+Status: early development (stage 2 of 10: finds struggling flag cards and logs them; no mnemonics yet).
 
 ## Repo layout
 
@@ -12,8 +12,9 @@ src/flag_mnemonics/   the add-on (symlink this into a dev Anki, see docs/DEVELOP
   settings.py         typed config loading, no Anki imports
   config.json         default settings
   config.md           settings help shown in Anki's config dialog
-  triggers.py, generator.py, display.py, storage.py, images.py   later stages
-tests/                pytest, with Anki mocked
+  triggers.py         finds struggling flag cards (startup, after sync, Again)
+  generator.py, display.py, storage.py, images.py   later stages
+tests/                pytest, with Anki mocked (plus one test file on a real Anki backend)
 scripts/link_dev.py   symlinks the add-on into a dev Anki data folder
 docs/DEVELOPMENT.md   dev setup, test profile, Python version
 ```
