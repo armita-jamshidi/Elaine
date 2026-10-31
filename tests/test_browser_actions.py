@@ -180,3 +180,20 @@ def test_overlay_on_a_real_card(env, col, tmp_path):  # noqa: F811
     assert display.LABEL in out and "White over red" in out
     other = next(c for c in poland.cards() if c.template()["name"] == "Country - Capital")
     assert overlay.add_overlay("a", other, "reviewAnswer", OVERLAY, store) == "a"
+
+
+def test_illustration_on_real_media_and_removed_with_mnemonic(env, col):  # noqa: F811
+    import os
+
+    actions, browser, store, _, settings, _ = env
+    settings["value"] = Settings.from_config({"use_mock_api": True, "images_enabled": True, "huggingface_api_key": "x"})
+    poland = add_note(col, "Poland")
+    browser.selected_notes.return_value = [poland.id]
+    actions.regenerate(browser)
+    name = store.get(poland.id)["image"]
+    assert name.startswith("flagmnem_") and os.path.exists(os.path.join(col.media.dir(), name))
+    assert f'<img src="{name}"' in col.get_note(poland.id)["Mnemonic"]
+
+    actions.remove(browser)
+    assert not os.path.exists(os.path.join(col.media.dir(), name))
+    assert col.get_note(poland.id)["Mnemonic"] == ""

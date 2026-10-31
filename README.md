@@ -2,7 +2,7 @@
 
 An Anki desktop add-on that writes themed mnemonics (Seinfeld by default) for the flag cards you keep forgetting. Each mnemonic encodes what the flag actually looks like and how it differs from its look-alikes, and it's written into the card itself so it syncs to AnkiMobile and AnkiDroid.
 
-Status: early development (stage 6 of 10: writes mnemonics with Claude, puts them on your flag cards so they sync to your phone, repairs them after a deck upgrade, and has the menu and Browser actions below).
+Status: early development (stage 7 of 10: writes mnemonics with Claude, puts them on your flag cards so they sync to your phone, repairs them after a deck upgrade, has the menu and Browser actions below, and can add an optional illustration).
 
 ## What you can do in Anki
 
@@ -14,6 +14,8 @@ Status: early development (stage 6 of 10: writes mnemonics with Claude, puts the
     - *Remove mnemonic*: deletes the saved mnemonic, empties the Mnemonic field and removes the tag. If you keep missing that flag, it gets a fresh one later.
 - Every flag with a mnemonic gets the `mnemonic-added` tag, in both storage modes, so you can search for them with `tag:mnemonic-added`.
 - **Overlay mode** (`"storage_mode": "overlay"`): shows the same box on desktop at review time without touching the note type. It doesn't reach your phone.
+
+- **Illustrations** (`"images_enabled": true`, off by default): each new mnemonic also gets an original 512×512 picture from [FLUX.1-schnell](https://huggingface.co/black-forest-labs/FLUX.1-schnell) on Hugging Face, drawn from the mnemonic's image prompt. Pictures show objects and places from the joke (a diner booth, a puffy shirt), never people or actors. Needs a Hugging Face token.
 
 Mnemonics are also written automatically after you press Again on a flag for the 3rd time, when Anki starts, and after each sync (so misses on your phone get picked up).
 
@@ -37,7 +39,7 @@ src/flag_mnemonics/   the add-on (symlink this into a dev Anki, see docs/DEVELOP
   field_mode.py       one-time note type setup, writing to cards, repair, sync reminder
   overlay.py          overlay mode: adds the box at review time, desktop only
   browser_actions.py  Browser right-click: Regenerate / Remove mnemonic
-  images.py           later stage
+  images.py           optional illustrations (FLUX.1-schnell via Hugging Face); stdlib only
 tests/                pytest, with Anki mocked (plus tests on a real Anki backend)
 scripts/link_dev.py   symlinks the add-on into a dev Anki data folder
 scripts/sample_mnemonics.py   generates sample mnemonics outside Anki
