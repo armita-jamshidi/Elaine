@@ -32,6 +32,8 @@ class MnemonicStore:
     def __init__(self, path: str) -> None:
         self.path = path
         self.entries: dict[str, dict[str, Any]] = {}
+        # Small facts about this collection, e.g. whether field mode was ever set up.
+        self.meta: dict[str, Any] = {}
         self.load()
 
     def load(self) -> None:
@@ -39,17 +41,18 @@ class MnemonicStore:
             with open(self.path, encoding="utf-8") as f:
                 data = json.load(f)
         except FileNotFoundError:
-            self.entries = {}
+            self.entries, self.meta = {}, {}
             return
         except json.JSONDecodeError as err:
             # Never silently overwrite a damaged source of truth.
             raise ValueError(f"{self.path} is not valid JSON ({err}); fix or move it aside.") from err
         self.entries = dict(data.get("mnemonics", {}))
+        self.meta = dict(data.get("meta", {}))
 
     def save(self) -> None:
         directory = os.path.dirname(self.path) or "."
         os.makedirs(directory, exist_ok=True)
-        payload = {"version": FORMAT_VERSION, "mnemonics": self.entries}
+        payload = {"version": FORMAT_VERSION, "meta": self.meta, "mnemonics": self.entries}
         fd, tmp = tempfile.mkstemp(dir=directory, prefix=".mnemonics-", suffix=".json")
         try:
             with os.fdopen(fd, "w", encoding="utf-8") as f:
@@ -60,8 +63,8 @@ class MnemonicStore:
                 os.unlink(tmp)
             raise
 
-    def put(self, note_id: int, country: str, mnemonic: Mnemonic) -> dict[str, Any]:
-        entry = {"country": country, "created": int(time.time()), **mnemonic.to_dict()}
+    def put(self, note_id: int, country: str, mnemonic: Mnemonic, guid: str = "") -> dict[str, Any]:
+        entry = {"country": country, "created": int(time.time()), "guid": guid, **mnemonic.to_dict()}
         entry.pop("warnings", None)
         self.entries[str(note_id)] = entry
         self.save()
@@ -69,6 +72,15 @@ class MnemonicStore:
 
     def get(self, note_id: int) -> Optional[dict[str, Any]]:
         return self.entries.get(str(note_id))
+
+    def set_meta(self, key: str, value: Any) -> None:
+        if self.meta.get(key) != value:
+            self.meta[key] = value
+            self.save()
+
+    def rekey(self, old_id: int, new_id: int) -> None:
+        self.entries[str(new_id)] = self.entries.pop(str(old_id))
+        self.save()
 
     def remove(self, note_id: int) -> bool:
         if self.entries.pop(str(note_id), None) is None:
@@ -233,3 +245,72 @@ def clear_mnemonic_from_note(col: Any, settings: Settings, note_id: int) -> bool
     note.remove_tag(MNEMONIC_TAG)
     col.update_note(note)
     return True
+
+
+# --- upgrade repair --------------------------------------------------------
+#
+# Ultimate Geography upgrades go through CrowdAnki, which resets the note
+# type's templates and can drop fields it doesn't know (and their content)
+# and rewrite tags. Everything the add-on put on the cards can be rebuilt
+# from mnemonics.json, so repair = re-add field and snippet, then rewrite.
+
+FIELD_MODE_INSTALLED = "field_mode_installed"
+
+
+@dataclass
+class RepairReport:
+    changes: list[str]
+    restored: int = 0
+    relinked: int = 0
+    missing_notes: list[str] = None  # countries whose notes no longer exist
+    declined: bool = False
+
+    def __post_init__(self) -> None:
+        if self.missing_notes is None:
+            self.missing_notes = []
+
+    @property
+    def anything_done(self) -> bool:
+        return bool(self.changes or self.restored or self.relinked)
+
+    def summary(self, total: int) -> str:
+        if self.declined:
+            return (
+                "Repair skipped: the Mnemonic field wasn't re-added. Your mnemonics are still saved "
+                'and you can run Tools > "Repair mnemonics after deck upgrade" any time.'
+            )
+        lines = []
+        if self.anything_done:
+            lines.append("Flag Mnemonics repaired your cards:")
+            lines.extend(f"- {c}" for c in self.changes)
+            if self.relinked:
+                lines.append(f"- Matched {self.relinked} mnemonic(s) to notes that had been re-created.")
+            if self.restored:
+                lines.append(f"- Restored {self.restored} mnemonic(s) from the add-on's saved copy.")
+        else:
+            lines.append(f"Everything is in place: {total} mnemonic(s) on your cards, nothing to repair.")
+        if self.missing_notes:
+            lines.append(
+                f"- {len(self.missing_notes)} saved mnemonic(s) belong to notes that no longer exist "
+                f"({', '.join(sorted(self.missing_notes))}). They're kept in mnemonics.json."
+            )
+        return "\n".join(lines)
+
+
+def relink_by_guid(col: Any, store: MnemonicStore) -> tuple[int, list[str]]:
+    """Re-key entries whose note ID is gone but whose note GUID still exists.
+
+    Returns (relinked count, countries with no matching note).
+    """
+    relinked, missing = 0, []
+    for note_id, entry in list(store):
+        if col.db.scalar("select 1 from notes where id = ?", note_id):
+            continue
+        guid = entry.get("guid")
+        new_id = col.db.scalar("select id from notes where guid = ?", guid) if guid else None
+        if new_id:
+            store.rekey(note_id, new_id)
+            relinked += 1
+        else:
+            missing.append(entry.get("country") or str(note_id))
+    return relinked, missing

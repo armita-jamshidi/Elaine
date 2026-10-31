@@ -2,7 +2,7 @@
 
 An Anki desktop add-on that writes themed mnemonics (Seinfeld by default) for the flag cards you keep forgetting. Each mnemonic encodes what the flag actually looks like and how it differs from its look-alikes, and it's written into the card itself so it syncs to AnkiMobile and AnkiDroid.
 
-Status: early development (stage 4 of 10: writes mnemonics with Claude and puts them on your flag cards so they sync to your phone).
+Status: early development (stage 5 of 10: writes mnemonics with Claude, puts them on your flag cards so they sync to your phone, and repairs them after a deck upgrade).
 
 ![The mnemonic box on the back of a flag card](docs/images/mnemonic-box-light.png)
 

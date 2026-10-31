@@ -23,3 +23,10 @@ def test_hello_shows_settings():
 
 def test_found_cards_go_to_the_generator():
     assert addon.catcher.on_found is addon._on_found
+
+
+def test_repair_action_and_startup_hook():
+    qt = sys.modules["aqt.qt"]
+    hooks = sys.modules["aqt.gui_hooks"]
+    qt.QAction.assert_any_call("Repair mnemonics after deck upgrade", sys.modules["aqt"].mw)
+    assert len(hooks.profile_did_open) >= 2  # struggling-card scan + repair check
