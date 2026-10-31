@@ -1,0 +1,10 @@
+[project]
+name = "flag-mnemonics"
+version = "0.1.0"
+description = "Anki add-on that writes themed mnemonics for flag cards you keep forgetting"
+# Anki desktop ships Python 3.13; the launcher allows 3.10+, so stay compatible with 3.10.
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
