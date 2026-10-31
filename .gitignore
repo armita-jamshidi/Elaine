@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Secrets: never commit API keys
+.env
+*.env
+secrets.json
+# Anki writes your edited add-on config (including API keys) here
+src/flag_mnemonics/meta.json
+
+# Runtime data written by the add-on
+src/flag_mnemonics/user_files/*
+!src/flag_mnemonics/user_files/README.txt
+
+# Build output
+dist/
+*.ankiaddon
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
