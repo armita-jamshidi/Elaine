@@ -1,0 +1,17 @@
+{
+  "_about": "Simple flags drawn for this demo by make_flags.py from their geometric descriptions. National flags of this kind are in the public domain; colors are approximations of the official values. Look-alike notes were written for this demo.",
+  "flags": [
+    {"country": "Poland", "ratio": [8, 5], "layout": "horizontal", "colors": ["#FFFFFF", "#DC143C"], "similarity": "Indonesia and Monaco (red over white, the other way round)"},
+    {"country": "Indonesia", "ratio": [3, 2], "layout": "horizontal", "colors": ["#CE1126", "#FFFFFF"], "similarity": "Monaco (identical colors, Monaco's flag is squarer), Poland (white over red)"},
+    {"country": "Monaco", "ratio": [5, 4], "layout": "horizontal", "colors": ["#CE1126", "#FFFFFF"], "similarity": "Indonesia (identical colors, Indonesia's flag is longer), Poland (white over red)"},
+    {"country": "Chad", "ratio": [3, 2], "layout": "vertical", "colors": ["#002664", "#FECB00", "#C60C30"], "similarity": "Romania (nearly identical, Romania's blue is slightly lighter)"},
+    {"country": "Romania", "ratio": [3, 2], "layout": "vertical", "colors": ["#002B7F", "#FCD116", "#CE1126"], "similarity": "Chad (nearly identical, Chad's blue is slightly darker)"},
+    {"country": "Italy", "ratio": [3, 2], "layout": "vertical", "colors": ["#009246", "#FFFFFF", "#CE2B37"], "similarity": "Ireland (orange instead of red, longer flag), Ivory Coast (orange first, green last)"},
+    {"country": "Ireland", "ratio": [2, 1], "layout": "vertical", "colors": ["#169B62", "#FFFFFF", "#FF883E"], "similarity": "Ivory Coast (same colors in reverse order), Italy (red instead of orange)"},
+    {"country": "Ivory Coast", "ratio": [3, 2], "layout": "vertical", "colors": ["#F77F00", "#FFFFFF", "#009E60"], "similarity": "Ireland (same colors in reverse order, green on the hoist side)"},
+    {"country": "Netherlands", "ratio": [3, 2], "layout": "horizontal", "colors": ["#AE1C28", "#FFFFFF", "#21468B"], "similarity": "Luxembourg (lighter, sky blue, and a longer flag)"},
+    {"country": "Luxembourg", "ratio": [5, 3], "layout": "horizontal", "colors": ["#EA141D", "#FFFFFF", "#00A2E1"], "similarity": "Netherlands (darker blue, shorter flag)"},
+    {"country": "Russia", "ratio": [3, 2], "layout": "horizontal", "colors": ["#FFFFFF", "#0039A6", "#D52B1E"], "similarity": "Slovenia and Slovakia (same stripes plus a coat of arms)"},
+    {"country": "Austria", "ratio": [3, 2], "layout": "horizontal", "colors": ["#C8102E", "#FFFFFF", "#C8102E"], "similarity": "Latvia (darker maroon red, thinner white band)"}
+  ]
+}

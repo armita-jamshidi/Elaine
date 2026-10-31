@@ -1,0 +1,13 @@
+{
+  "_about": "Mnemonics shown before anyone presses the button. Run pregenerate.py with a Claude key to fill this with real Seinfeld mnemonics for every demo flag.",
+  "mnemonics": [
+    {
+      "country": "Poland",
+      "theme": "Seinfeld",
+      "mnemonic": "Indonesia and Monaco are both red over white, and Monaco's flag is shorter and stubbier, like George. Poland is upside down (white over red), like George in 'The Opposite,' when he does the opposite of every instinct.",
+      "episode_title": "The Opposite",
+      "distinguishing_detail": "white on top, red below (Indonesia and Monaco are red on top)",
+      "note": "Hand-written example from the add-on's prompt, not AI-generated. Other flags: press the button."
+    }
+  ]
+}
