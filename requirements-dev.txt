@@ -1,1 +1,3 @@
 pytest>=8
+# Anki's own backend, used only by tests/test_real_collection.py (skipped if missing).
+anki>=25.2

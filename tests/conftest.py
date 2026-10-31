@@ -22,8 +22,48 @@ def _install_fake_aqt() -> None:
     qt.QAction = MagicMock(name="QAction")
     utils = types.ModuleType("aqt.utils")
     utils.showInfo = MagicMock(name="showInfo")
-    aqt.qt, aqt.utils = qt, utils
-    sys.modules.update({"aqt": aqt, "aqt.qt": qt, "aqt.utils": utils})
+    utils.tooltip = MagicMock(name="tooltip")
+
+    gui_hooks = types.ModuleType("aqt.gui_hooks")
+    for hook in ("profile_did_open", "sync_did_finish", "reviewer_did_answer_card"):
+        setattr(gui_hooks, hook, [])
+
+    operations = types.ModuleType("aqt.operations")
+    operations.QueryOp = FakeQueryOp
+
+    aqt.qt, aqt.utils, aqt.gui_hooks, aqt.operations = qt, utils, gui_hooks, operations
+    sys.modules.update(
+        {
+            "aqt": aqt,
+            "aqt.qt": qt,
+            "aqt.utils": utils,
+            "aqt.gui_hooks": gui_hooks,
+            "aqt.operations": operations,
+        }
+    )
+
+
+class FakeQueryOp:
+    """Runs the op immediately against `parent.col` instead of in a thread."""
+
+    instances: list = []
+
+    def __init__(self, *, parent, op, success):
+        self.parent, self.op, self.success = parent, op, success
+        self.on_failure = None
+        FakeQueryOp.instances.append(self)
+
+    def failure(self, callback):
+        self.on_failure = callback
+        return self
+
+    def run_in_background(self):
+        try:
+            result = self.op(self.parent.col)
+        except Exception as err:  # mirror Anki: route errors to failure()
+            self.on_failure(err)
+        else:
+            self.success(result)
 
 
 _install_fake_aqt()
