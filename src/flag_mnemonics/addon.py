@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from aqt import mw
+from aqt import gui_hooks, mw
 from aqt.qt import QAction
 from aqt.utils import showInfo, tooltip
 
 from . import triggers
+from .field_mode import FieldMode
 from .pipeline import Pipeline
 from .settings import Settings
 
@@ -15,6 +16,7 @@ PACKAGE = __name__.split(".")[0]
 
 generation: Pipeline
 catcher: triggers.Catcher
+field_mode: FieldMode
 
 
 def get_settings() -> Settings:
@@ -44,6 +46,7 @@ def _generate_now() -> None:
         tooltip(f"{ADDON_NAME}: writing {len(todo)} mnemonic(s) in the background…")
 
         def show(result):
+            _after_generation(result)
             if not result.missing_key:
                 showInfo(result.summary(), title=ADDON_NAME)
 
@@ -52,16 +55,25 @@ def _generate_now() -> None:
     catcher.scan("Manual run", on_found=found)
 
 
+def _after_generation(result) -> None:
+    if result.written:
+        field_mode.apply([note_id for note_id, _, _ in result.written])
+
+
 def _on_found(cards, reason) -> None:
     catcher.log_found(cards, reason)
-    generation.generate(cards, reason)
+    generation.generate(cards, reason, on_done=_after_generation)
 
 
 def setup() -> None:
-    global generation, catcher
+    global generation, catcher, field_mode
     generation = Pipeline(mw, get_settings)
+    field_mode = FieldMode(mw, get_settings, generation.store)
     catcher = triggers.register(mw, get_settings)
     catcher.on_found = _on_found
+    # Catch up on mnemonics that are saved but not on the cards yet
+    # (for example, if you said No to adding the field last time).
+    gui_hooks.profile_did_open.append(lambda: field_mode.apply())
     for label, handler in (
         (f"Hello from {ADDON_NAME}", _say_hello),
         ("Generate mnemonics for struggling flags", _generate_now),
