@@ -19,7 +19,7 @@ OWN_KEY = "My own Claude API key"
 INTRO = """# 🥨 Flag Mnemonics
 Pick a flag you keep mixing up. You get a short mnemonic, themed on a show you know, that encodes what the flag
 actually looks like and how it differs from its look-alikes. It's a demo of an
-[Anki add-on](https://github.com/armita-jamshidi/Elaine) that does this for the flags you keep forgetting in
+[Anki add-on](https://github.com/armita-jamshidi/yada-yada-flags) that does this for the flags you keep forgetting in
 Ultimate Geography, and syncs the mnemonics to your phone."""
 
 KEY_NOTE = (

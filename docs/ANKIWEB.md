@@ -37,14 +37,14 @@ I couldn't open the upload form from here (it needs your login), so field names 
 
 **Branch 1 supports:** `23.10` to `26.9` (no `-` prefix, so newer versions can still download it).
 
-**Support page:** https://github.com/armita-jamshidi/Elaine/issues
+**Support page:** https://github.com/armita-jamshidi/yada-yada-flags/issues
 
 **Description.** AnkiWeb descriptions accept basic HTML (paragraphs, bold, links, lists, images); paste this and check the preview:
 
 ```html
 <b>Keep forgetting the same flags in Ultimate Geography?</b> This add-on writes a short mnemonic for each flag you've missed 3 or more times, themed on a show you know well (Seinfeld by default), and puts it on the back of the card.
 
-<img src="https://raw.githubusercontent.com/armita-jamshidi/Elaine/main/docs/images/demo.gif" alt="A Poland flag card showing its mnemonic">
+<img src="https://raw.githubusercontent.com/armita-jamshidi/yada-yada-flags/main/docs/images/demo.gif" alt="A Poland flag card showing its mnemonic">
 
 <b>What makes it useful</b>
 <ul>
@@ -65,7 +65,7 @@ I couldn't open the upload form from here (it needs your login), so field names 
 
 <b>First run.</b> Adding the Mnemonic field is a change to the note type, so your next sync is a one-way full sync. The add-on asks first and shows the exact steps: sync your phone, click Yes, upload from desktop, download on the phone. Please back up your collection before installing any add-on that edits a note type (File > Export > Collection Package).
 
-Source, docs and issue tracker: <a href="https://github.com/armita-jamshidi/Elaine">github.com/armita-jamshidi/Elaine</a>
+Source, docs and issue tracker: <a href="https://github.com/armita-jamshidi/yada-yada-flags">github.com/armita-jamshidi/yada-yada-flags</a>
 
 Credits: Ultimate Geography by the anki-geo contributors (this add-on doesn't include any of its images); mnemonics by Claude (Anthropic); illustrations by FLUX.1-schnell (Black Forest Labs, Apache 2.0) via Hugging Face. Not affiliated with Seinfeld or its makers.
 ```

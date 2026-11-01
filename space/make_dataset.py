@@ -28,7 +28,7 @@ tags: [mnemonics, flags, geography, education]
 # Flag Mnemonics: Seinfeld
 
 Short mnemonics for telling look-alike national flags apart, themed on Seinfeld. Written by Claude
-(Anthropic) with the prompt from the [Flag Mnemonics Anki add-on](https://github.com/armita-jamshidi/Elaine),
+(Anthropic) with the prompt from the [Flag Mnemonics Anki add-on](https://github.com/armita-jamshidi/yada-yada-flags),
 which asks for the flag's real colors and layout, its distinguishing detail, and a real episode title (or none).
 
 Columns: `country`, `theme`, `model`, `mnemonic`, `episode_title`, `context`, `distinguishing_detail`, `similarity`,
