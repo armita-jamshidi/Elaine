@@ -4,7 +4,7 @@ An Anki desktop add-on that writes themed mnemonics (Seinfeld by default) for th
 
 ![Demo: a Poland flag card flips to its answer, and a Seinfeld mnemonic appears in a 🥨 box](docs/images/demo.gif)
 
-Status: feature-complete and in testing. Not on AnkiWeb yet; install it from a `.ankiaddon` file.
+**Published on [AnkiWeb](https://ankiweb.net/shared/info/1050900423)** (add-on code `1050900423`).
 
 ## Try it in your browser
 
@@ -15,8 +15,8 @@ Status: feature-complete and in testing. Not on AnkiWeb yet; install it from a `
 ## Install
 
 1. **Back up your collection first.** In Anki: File > Export > "Anki Collection Package (.colpkg)", tick "Include media", and keep the file somewhere safe. Also sync, so AnkiWeb has your latest reviews.
-2. **Get the add-on file.** Download `flag-mnemonics-ankiaddon` from the latest green [tests run](https://github.com/armita-jamshidi/Elaine/actions/workflows/tests.yml) on `main` (under Artifacts, unzip it), or build it yourself with `python scripts/package.py` (it appears in `dist/`).
-3. **Install it.** Double-click `flag_mnemonics-0.1.0.ankiaddon`, or in Anki: Tools > Add-ons > Install from file. Restart Anki.
+2. **Install it from AnkiWeb.** In Anki: Tools > Add-ons > Get Add-ons, paste the code `1050900423`, click OK, and restart Anki. ([Add-on page](https://ankiweb.net/shared/info/1050900423))
+3. **Or from a file** (for development builds): build it with `python scripts/package.py` (it appears in `dist/`), or download `flag-mnemonics-ankiaddon` from the latest green [tests run](https://github.com/armita-jamshidi/Elaine/actions/workflows/tests.yml) on `main`. Then Tools > Add-ons > Install from file, and restart Anki.
 4. **Add your Claude API key.** Get one at https://console.anthropic.com, then Tools > Add-ons > Flag Mnemonics > Config, and paste it into `claude_api_key`. The key stays on your computer (in the add-on's `meta.json`) and is only sent to Anthropic.
 5. **Optional:** change `theme` (any show, book or film you know well), turn on `images_enabled` and add `huggingface_api_key` for pictures. Every setting is explained next to the config.
 
