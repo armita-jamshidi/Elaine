@@ -33,4 +33,4 @@ From then on it's routine: study on your phone, open desktop Anki every few days
 
 - **No box on the answer side:** check the card is a "Flag - Country" card (or whatever is in `flag_card_templates`), and that the note's Mnemonic field isn't empty in the desktop Browser.
 - **The box shows on the front:** it shouldn't. The snippet is only added to back templates. Please tell me which app and card type.
-- **The field or box disappeared after a deck update:** that's what stage 5's repair is for. Until then, your mnemonics are safe in the add-on's `user_files/mnemonics.json`.
+- **The field or box disappeared after a deck update:** open desktop Anki. On startup the add-on notices and offers to repair it, restoring every mnemonic from its saved copy. You can also run Tools > "Repair mnemonics after deck upgrade". If it had to re-add the field, the next sync is a full sync again: follow the same steps as above.

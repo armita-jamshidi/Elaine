@@ -71,12 +71,13 @@ def setup() -> None:
     field_mode = FieldMode(mw, get_settings, generation.store)
     catcher = triggers.register(mw, get_settings)
     catcher.on_found = _on_found
-    # Catch up on mnemonics that are saved but not on the cards yet
-    # (for example, if you said No to adding the field last time).
-    gui_hooks.profile_did_open.append(lambda: field_mode.apply())
+    # After a deck upgrade, put back the field, the box, and every saved
+    # mnemonic. Also catches up on mnemonics that never made it onto cards.
+    gui_hooks.profile_did_open.append(lambda: field_mode.repair())
     for label, handler in (
         (f"Hello from {ADDON_NAME}", _say_hello),
         ("Generate mnemonics for struggling flags", _generate_now),
+        ("Repair mnemonics after deck upgrade", lambda: field_mode.repair(manual=True)),
     ):
         action = QAction(label, mw)
         action.triggered.connect(handler)

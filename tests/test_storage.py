@@ -56,3 +56,13 @@ def test_unicode_round_trip(tmp_path):
     store = MnemonicStore(str(tmp_path / "m.json"))
     store.put(5, "Côte d'Ivoire", m("orange-white-green 🥨"))
     assert MnemonicStore(str(tmp_path / "m.json")).get(5)["mnemonic"] == "orange-white-green 🥨"
+
+
+def test_meta_and_guid_persist(tmp_path):
+    store = MnemonicStore(str(tmp_path / "m.json"))
+    store.put(1, "Chad", m("x"), guid="abc")
+    store.set_meta("field_mode_installed", True)
+    store.rekey(1, 2)
+    again = MnemonicStore(str(tmp_path / "m.json"))
+    assert again.meta == {"field_mode_installed": True}
+    assert again.get(2)["guid"] == "abc" and again.get(1) is None

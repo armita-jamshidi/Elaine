@@ -32,6 +32,7 @@ STORE_PATH = os.path.join(os.path.dirname(__file__), "user_files", "mnemonics.js
 class Job:
     note_id: int
     flag: FlagInput
+    guid: str = ""
 
 
 @dataclass
@@ -69,6 +70,7 @@ def build_jobs(col: Any, settings: Settings, cards: Sequence[StrugglingCard], st
         jobs.append(
             Job(
                 note_id=card.note_id,
+                guid=getattr(note, "guid", ""),
                 flag=FlagInput(
                     country=strip_html(field_text(fields.country)) or card.country,
                     image=media.load_flag_image(media_dir, field_text(fields.flag)),
@@ -107,7 +109,7 @@ def run_jobs(
         except GenerationError as err:
             result.failed.append((job.note_id, job.flag.country, str(err)))
             continue
-        store.put(job.note_id, job.flag.country, mnemonic)
+        store.put(job.note_id, job.flag.country, mnemonic, guid=job.guid)
         result.written.append((job.note_id, job.flag.country, mnemonic))
     return result
 
