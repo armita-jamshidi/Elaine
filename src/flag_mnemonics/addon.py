@@ -6,7 +6,7 @@ from aqt import gui_hooks, mw
 from aqt.qt import QAction
 from aqt.utils import showInfo, tooltip
 
-from . import triggers
+from . import browser_actions, overlay, triggers
 from .field_mode import FieldMode
 from .pipeline import Pipeline
 from .settings import Settings
@@ -17,16 +17,19 @@ PACKAGE = __name__.split(".")[0]
 generation: Pipeline
 catcher: triggers.Catcher
 field_mode: FieldMode
+browser: browser_actions.BrowserActions
 
 
 def get_settings() -> Settings:
     return Settings.from_config(mw.addonManager.getConfig(PACKAGE))
 
 
-def _say_hello() -> None:
+def _about() -> None:
     showInfo(
-        f"Hello from {ADDON_NAME}!\n\nLoaded settings:\n{get_settings().summary()}\n\n"
-        f"Stored mnemonics: {len(generation.store)}",
+        f"{ADDON_NAME}\n\nThemed mnemonics for the flags you keep forgetting.\n\n"
+        f"Settings:\n{get_settings().summary()}\n\n"
+        f"Saved mnemonics: {len(generation.store)}\n\n"
+        "Change settings in Tools > Add-ons > Flag Mnemonics > Config.",
         title=ADDON_NAME,
     )
 
@@ -43,14 +46,13 @@ def _generate_now() -> None:
         if not todo:
             showInfo(f"All {len(cards)} struggling flag(s) already have a mnemonic.", title=ADDON_NAME)
             return
-        tooltip(f"{ADDON_NAME}: writing {len(todo)} mnemonic(s) in the background…")
-
         def show(result):
             _after_generation(result)
             if not result.missing_key:
                 showInfo(result.summary(), title=ADDON_NAME)
 
-        generation.generate(todo, reason, on_done=show)
+        if not generation.generate(todo, reason, on_done=show, show_progress=True):
+            tooltip(f"{ADDON_NAME}: mnemonics are already being written. Try again in a moment.")
 
     catcher.scan("Manual run", on_found=found)
 
@@ -66,18 +68,21 @@ def _on_found(cards, reason) -> None:
 
 
 def setup() -> None:
-    global generation, catcher, field_mode
+    global generation, catcher, field_mode, browser
     generation = Pipeline(mw, get_settings)
     field_mode = FieldMode(mw, get_settings, generation.store)
     catcher = triggers.register(mw, get_settings)
     catcher.on_found = _on_found
+    overlay.register(get_settings, generation.store)
+    browser = browser_actions.BrowserActions(mw, get_settings, generation, field_mode, _after_generation)
+    browser_actions.register(browser)
     # After a deck upgrade, put back the field, the box, and every saved
     # mnemonic. Also catches up on mnemonics that never made it onto cards.
     gui_hooks.profile_did_open.append(lambda: field_mode.repair())
     for label, handler in (
-        (f"Hello from {ADDON_NAME}", _say_hello),
         ("Generate mnemonics for struggling flags", _generate_now),
         ("Repair mnemonics after deck upgrade", lambda: field_mode.repair(manual=True)),
+        (f"About {ADDON_NAME}", _about),
     ):
         action = QAction(label, mw)
         action.triggered.connect(handler)

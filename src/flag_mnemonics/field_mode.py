@@ -34,6 +34,11 @@ REPAIR_MESSAGE = (
     "won't change.\n\n" + FULL_SYNC_STEPS + "\n\nRepair now?"
 )
 
+OVERLAY_REPAIR_MESSAGE = (
+    'Storage mode is "overlay", so mnemonics are shown at review time and nothing on the cards '
+    "needs repairing. Re-added the mnemonic-added tag to {count} note(s)."
+)
+
 
 class FieldMode:
     def __init__(self, mw: Any, get_settings: Callable[[], Settings], store: storage.MnemonicStore) -> None:
@@ -104,10 +109,31 @@ class FieldMode:
         self._install(settings)
         return True
 
+    def tag(self, note_ids: Optional[Iterable[int]] = None, on_done: Optional[Callable[[int], None]] = None) -> None:
+        """Overlay mode: add the `mnemonic-added` tag (the only change made to notes)."""
+        notes = storage.notes_needing_tag(self.mw.col, self.store, note_ids)
+
+        def done() -> None:
+            if notes:
+                get_logger().info("Tagged %d note(s) %s.", len(notes), storage.MNEMONIC_TAG)
+            if on_done:
+                on_done(len(notes))
+
+        if notes:
+            self._write(notes, done)
+        else:
+            done()
+
     def apply(self, note_ids: Optional[Iterable[int]] = None, interactive: bool = True) -> None:
-        """Copy stored mnemonics onto the cards, then remind you to sync."""
+        """Copy stored mnemonics onto the cards, then remind you to sync.
+
+        In overlay mode only the tag is added; the mnemonic shows at review time.
+        """
         settings = self.get_settings()
-        if settings.storage_mode != "field" or not len(self.store):
+        if not len(self.store):
+            return
+        if settings.storage_mode == "overlay":
+            self.tag(note_ids)
             return
         if not self.ensure_installed(settings, interactive):
             return
@@ -131,9 +157,16 @@ class FieldMode:
         from aqt.utils import showInfo
 
         settings = self.get_settings()
-        if settings.storage_mode != "field":
-            if manual:
-                showInfo("Storage mode is \"overlay\", so there's nothing on the cards to repair.", title=TITLE)
+        if settings.storage_mode == "overlay":
+            if len(self.store):
+
+                def tagged(count: int) -> None:
+                    if manual:
+                        showInfo(OVERLAY_REPAIR_MESSAGE.format(count=count), title=TITLE)
+
+                self.tag(on_done=tagged)
+            elif manual:
+                showInfo("No mnemonics have been saved yet, so there's nothing to repair.", title=TITLE)
             return
         if not len(self.store):
             if manual:

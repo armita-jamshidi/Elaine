@@ -27,15 +27,22 @@ EPISODE_STYLE = "margin-top:.4em;font-size:.85em;opacity:.75"
 IMAGE_STYLE = "display:block;max-width:100%;height:auto;margin-top:.5em;border-radius:4px"
 
 
+def box_html(inner_html: str) -> str:
+    """The 🥨 box around a mnemonic. Same look in field and overlay mode."""
+    return (
+        f'<div class="flag-mnemonic" style="{BOX_STYLE}">'
+        f'<div style="{LABEL_STYLE}">{LABEL}</div>'
+        f"{inner_html}"
+        f"</div>"
+    )
+
+
 def template_snippet(field_name: str) -> str:
     """The block added to the back template. Hidden while the field is empty."""
     return (
         f"{SNIPPET_START}\n"
         f"{{{{#{field_name}}}}}\n"
-        f'<div class="flag-mnemonic" style="{BOX_STYLE}">'
-        f'<div style="{LABEL_STYLE}">{LABEL}</div>'
-        f"{{{{{field_name}}}}}"
-        f"</div>\n"
+        f"{box_html('{{' + field_name + '}}')}\n"
         f"{{{{/{field_name}}}}}\n"
         f"{SNIPPET_END}"
     )

@@ -129,3 +129,58 @@ def test_pipeline_warns_once_about_missing_key(tmp_path, monkeypatch):
     p.generate(cards, "After sync")
     assert showWarning.call_count == 1
     assert "claude_api_key" in showWarning.call_args.args[0]
+
+
+def test_run_jobs_reports_progress(tmp_path):
+    col, cards, store = setup(tmp_path)
+    seen = []
+    run_jobs(
+        build_jobs(col, Settings(), cards, store),
+        Settings(),
+        store,
+        "t",
+        transport=mock_transport,
+        on_progress=lambda done, total, country: seen.append((done, total, country)),
+    )
+    assert seen == [(0, 2, "Poland"), (1, 2, "Monaco")]
+
+
+def test_force_includes_stored_notes_with_previous_mnemonic(tmp_path):
+    col, cards, store = setup(tmp_path)
+    run_jobs(build_jobs(col, Settings(), cards[:1], store), Settings(), store, "t", transport=mock_transport)
+    jobs = build_jobs(col, Settings(), cards, store, force=True)
+    assert [j.note_id for j in jobs] == [10, 20]
+    assert jobs[0].flag.previous.startswith("[mock] Poland")
+    assert jobs[1].flag.previous == ""
+
+
+def test_manual_batch_shows_progress_window(tmp_path):
+    col, cards, store = setup(tmp_path)
+    mw = MagicMock()
+    mw.col = col
+    mw.taskman.run_on_main.side_effect = lambda closure: closure()
+    p = Pipeline(mw, lambda: Settings.from_config({"use_mock_api": True}), str(tmp_path / "m.json"))
+    assert p.generate(cards, "Manual run", show_progress=True)
+    op = sys.modules["aqt.operations"].QueryOp.instances[-1]
+    assert op.progress_label == "Writing 2 mnemonic(s)…"
+    assert mw.progress.update.call_args.kwargs == {"label": "Writing mnemonic 2 of 2: Monaco", "value": 1, "max": 2}
+
+
+def test_automatic_runs_stay_quiet(tmp_path):
+    col, cards, store = setup(tmp_path)
+    mw = MagicMock()
+    mw.col = col
+    p = Pipeline(mw, lambda: Settings.from_config({"use_mock_api": True}), str(tmp_path / "m.json"))
+    assert p.generate(cards, "After answering")
+    op = sys.modules["aqt.operations"].QueryOp.instances[-1]
+    assert not hasattr(op, "progress_label")
+    mw.progress.update.assert_not_called()
+
+
+def test_generate_returns_false_when_busy(tmp_path):
+    col, cards, store = setup(tmp_path)
+    mw = MagicMock()
+    mw.col = col
+    p = Pipeline(mw, lambda: Settings.from_config({"use_mock_api": True}), str(tmp_path / "m.json"))
+    p.running = True
+    assert p.generate(cards, "t") is False

@@ -236,15 +236,61 @@ def write_mnemonics_to_notes(
     return [n.id for n in notes]
 
 
-def clear_mnemonic_from_note(col: Any, settings: Settings, note_id: int) -> bool:
-    """Empty the Mnemonic field and remove the tag. Other fields are untouched."""
-    note = col.get_note(note_id)
+def notes_needing_tag(
+    col: Any,
+    store: "MnemonicStore",
+    note_ids: Optional[Iterable[int]] = None,
+) -> list[Any]:
+    """Notes with a stored mnemonic but no `mnemonic-added` tag, tagged in memory.
+
+    Used in overlay mode, where the tag is the only change made to notes.
+    Save the result with `col.update_notes(notes)`.
+    """
+    wanted = set(note_ids) if note_ids is not None else None
+    notes = []
+    for note_id, _entry in store:
+        if wanted is not None and note_id not in wanted:
+            continue
+        try:
+            note = col.get_note(note_id)
+        except Exception:
+            continue
+        if not note.has_tag(MNEMONIC_TAG):
+            note.add_tag(MNEMONIC_TAG)
+            notes.append(note)
+    return notes
+
+
+def notes_to_clear(col: Any, settings: Settings, note_ids: Iterable[int]) -> list[Any]:
+    """Empty the Mnemonic field and remove the tag, in memory. Other fields are untouched.
+
+    Returns only the notes that changed; save them with `col.update_notes(notes)`.
+    """
     field_name = settings.fields.mnemonic
-    if field_name in note:
-        note[field_name] = ""
-    note.remove_tag(MNEMONIC_TAG)
-    col.update_note(note)
-    return True
+    notes = []
+    for note_id in note_ids:
+        try:
+            note = col.get_note(note_id)
+        except Exception:
+            continue
+        changed = False
+        if field_name in note and note[field_name]:
+            note[field_name] = ""
+            changed = True
+        if note.has_tag(MNEMONIC_TAG):
+            note.remove_tag(MNEMONIC_TAG)
+            changed = True
+        if changed:
+            notes.append(note)
+    return notes
+
+
+def clear_mnemonic_from_note(col: Any, settings: Settings, note_id: int) -> bool:
+    """Empty the Mnemonic field and remove the tag on one note, and save it."""
+    notes = notes_to_clear(col, settings, [note_id])
+    if notes:
+        col.update_notes(notes)
+    return bool(notes)
 
 
 # --- upgrade repair --------------------------------------------------------

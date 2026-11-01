@@ -95,6 +95,8 @@ class FlagInput:
     country: str
     image: Optional[FlagImage] = None
     flag_similarity: str = ""
+    # Set when regenerating: the mnemonic being replaced.
+    previous: str = ""
 
 
 @dataclass(frozen=True)
@@ -175,6 +177,10 @@ def build_user_text(flag: FlagInput, context: Sequence[PriorMnemonic]) -> str:
         for p in context:
             detail = f" [distinguishing detail: {p.distinguishing_detail}]" if p.distinguishing_detail else ""
             lines.append(f"- {p.country}: {p.mnemonic}{detail}")
+    if flag.previous.strip():
+        lines.append("")
+        lines.append(f"The current mnemonic for {flag.country} didn't stick: {flag.previous.strip()}")
+        lines.append("Write a new one with a different scene; don't reuse its gag.")
     lines.append("")
     lines.append(f"Write the mnemonic for {flag.country}.")
     return "\n".join(lines)

@@ -14,7 +14,7 @@ Changes take effect after you restart Anki.
 - `flag_card_templates`: Names of the card templates that count as flag cards. Default `["Flag - Country", "Country - Flag"]` (the second only exists in the Extended version of Ultimate Geography).
 - `storage_mode`: Where mnemonics are shown.
     - `"field"` (default): written into the `Mnemonic` field and shown by a small snippet on the back of flag cards. Syncs to AnkiMobile and AnkiDroid. The first time, the add-on asks before adding the field, because adding a field makes your next sync a one-way full sync.
-    - `"overlay"`: shown only on desktop at review time. Nothing on the cards changes. Use this if you never study on your phone.
+    - `"overlay"`: shown only on desktop at review time, on the answer side of flag cards. The note type and fields aren't changed; notes only get the `mnemonic-added` tag. Use this if you never study on your phone.
 - `images_enabled`: Generate an original illustration for each mnemonic with Hugging Face. Default `false`. Needs `huggingface_api_key`.
 - `catch_up_on_startup`: Look for struggling flags when Anki starts. Default `true`.
 - `catch_up_after_sync`: Look for struggling flags after each sync, so misses from your phone are picked up. Default `true`.

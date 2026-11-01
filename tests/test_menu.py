@@ -7,18 +7,26 @@ from flag_mnemonics import addon
 def test_tools_menu_items_are_added():
     qt = sys.modules["aqt.qt"]
     mw = sys.modules["aqt"].mw
-    qt.QAction.assert_any_call("Hello from Flag Mnemonics", mw)
     qt.QAction.assert_any_call("Generate mnemonics for struggling flags", mw)
+    qt.QAction.assert_any_call("About Flag Mnemonics", mw)
+    labels = [c.args[0] for c in qt.QAction.call_args_list]
+    assert not any(label.startswith("Hello") for label in labels)
     mw.form.menuTools.addAction.assert_called()
 
 
-def test_hello_shows_settings():
+def test_about_shows_settings():
     showInfo = sys.modules["aqt.utils"].showInfo
-    addon._say_hello()
+    addon._about()
     text = showInfo.call_args.args[0]
-    assert text.startswith("Hello from Flag Mnemonics!")
+    assert text.startswith("Flag Mnemonics")
     assert "Theme: Seinfeld" in text
-    assert "Stored mnemonics:" in text
+    assert "Saved mnemonics:" in text
+
+
+def test_overlay_and_browser_hooks_registered():
+    hooks = sys.modules["aqt.gui_hooks"]
+    assert addon.browser.add_to_menu in hooks.browser_will_show_context_menu
+    assert len(hooks.card_will_show) >= 1
 
 
 def test_found_cards_go_to_the_generator():

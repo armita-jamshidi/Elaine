@@ -43,7 +43,7 @@ python scripts/link_dev.py ~/AnkiDev
 
 This symlinks `src/flag_mnemonics` into `~/AnkiDev/addons21/flag_mnemonics`, so edits in the repo show up after an Anki restart. The script refuses to link into your real Anki data folder. On Windows, symlinks need Developer Mode turned on (Settings > For developers), or run the terminal as administrator.
 
-**6. Check it loaded.** Start Anki with the dev folder again (step 2). Tools > "Hello from Flag Mnemonics" should show a greeting and the settings it loaded. Tools > Add-ons > Flag Mnemonics > Config opens `config.json` with `config.md` beside it.
+**6. Check it loaded.** Start Anki with the dev folder again (step 2). Tools > "About Flag Mnemonics" should show the settings it loaded. Tools > Add-ons > Flag Mnemonics > Config opens `config.json` with `config.md` beside it.
 
 ## Making some flags "struggle" for testing
 
@@ -77,6 +77,17 @@ pip install PyQt6   # optional: renders the SVG flags to PNG, as Anki does
 ANTHROPIC_API_KEY=sk-ant-... python scripts/sample_mnemonics.py --out samples.md
 python scripts/sample_mnemonics.py --theme "The Office" Poland Indonesia Monaco
 ```
+
+## Trying the stage 6 actions
+
+In the dev copy, with `"use_mock_api": true` (free) or a real key:
+
+1. **Batch:** make a few flags struggle (see above), then Tools > "Generate mnemonics for struggling flags". A progress window counts through the flags ("Writing mnemonic 2 of 5: Chad"), then a summary lists what was written. Automatic runs (startup, after sync, after Again) don't show this window and stay in the background.
+2. **Regenerate:** in the Browser, select one or more flag notes, right-click > "Regenerate mnemonic". The old mnemonic is replaced, and Claude is told it didn't stick so the new one uses a different scene.
+3. **Remove:** select notes, right-click > "Remove mnemonic", confirm. The Mnemonic field is emptied, the `mnemonic-added` tag is removed, and the saved copy is deleted. Nothing else on the note changes.
+4. **Overlay mode:** set `"storage_mode": "overlay"` in the config and restart. Review or preview a flag card that has a mnemonic: the 🥨 box shows on the answer side. The note type doesn't get a field (in a fresh dev copy), and the notes are only tagged. If a card already shows the box from field mode, overlay mode doesn't add a second one. Switch back to `"field"` afterwards.
+
+Selections that include other note types are fine: those notes are skipped.
 
 ## Simulating an Ultimate Geography upgrade
 
