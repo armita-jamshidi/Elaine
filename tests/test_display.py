@@ -44,5 +44,24 @@ def test_field_html_escapes_and_includes_episode_and_image():
     assert 'src="flagmnem_poland.png"' in out
 
 
+def test_field_html_shows_what_happens_under_the_episode():
+    out = display.field_html(
+        {"mnemonic": "M.", "episode_title": "The Opposite", "context": "George does the <opposite>."}
+    )
+    assert out.index("📺 Episode") < out.index("George does the &lt;opposite&gt;.")
+    assert display.CONTEXT_STYLE in out
+
+
+def test_field_html_context_without_episode_gets_the_icon():
+    out = display.field_html({"mnemonic": "M.", "episode_title": "", "context": "Kramer bursts in."})
+    assert "📺 Kramer bursts in." in out and "Episode:" not in out
+
+
+def test_field_html_old_entries_are_unchanged():
+    # Entries saved before `context` existed render exactly as they did, so repair doesn't rewrite them.
+    entry = {"mnemonic": "M.", "episode_title": "The Opposite"}
+    assert display.field_html(entry) == 'M.<div style="' + display.EPISODE_STYLE + '">📺 Episode: “The Opposite”</div>'
+
+
 def test_field_html_minimal():
     assert display.field_html({"mnemonic": "Just this.", "episode_title": None}) == "Just this."

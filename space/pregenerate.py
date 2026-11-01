@@ -55,6 +55,7 @@ def main(argv=None) -> int:
             "model": args.model,
             "mnemonic": m.mnemonic,
             "episode_title": m.episode_title,
+            "context": m.context,
             "distinguishing_detail": m.distinguishing_detail,
             "note": f"Pre-written by Claude ({args.model}), {args.theme} theme.",
         }

@@ -31,7 +31,7 @@ Short mnemonics for telling look-alike national flags apart, themed on Seinfeld.
 (Anthropic) with the prompt from the [Flag Mnemonics Anki add-on](https://github.com/armita-jamshidi/Elaine),
 which asks for the flag's real colors and layout, its distinguishing detail, and a real episode title (or none).
 
-Columns: `country`, `theme`, `model`, `mnemonic`, `episode_title`, `distinguishing_detail`, `similarity`,
+Columns: `country`, `theme`, `model`, `mnemonic`, `episode_title`, `context`, `distinguishing_detail`, `similarity`,
 `image` (the stripe drawing used as input, in `images/`).
 
 AI-written: check before relying on them. Episode titles were requested only when real, but verify them.
@@ -52,7 +52,7 @@ def main() -> int:
         for e in rows:
             flag = flags[e["country"]]
             shutil.copy(flag.path, OUT / "images" / flag.path.name)
-            row = {k: e.get(k) for k in ("country", "theme", "model", "mnemonic", "episode_title", "distinguishing_detail")}
+            row = {k: e.get(k) for k in ("country", "theme", "model", "mnemonic", "episode_title", "context", "distinguishing_detail")}
             row.update(similarity=flag.similarity, image=f"images/{flag.path.name}")
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
     (OUT / "README.md").write_text(CARD, encoding="utf-8")

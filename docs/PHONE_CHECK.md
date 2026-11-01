@@ -23,7 +23,7 @@ You can't do this from the dev copy, because it must stay signed out of your rea
 5. **Generate.** Tools > "Generate mnemonics for struggling flags". When it asks to add the Mnemonic field, read the steps it shows and click Yes.
 6. **Sync desktop Anki.** Anki says a one-way sync is needed. Choose **Upload to AnkiWeb**.
 7. **Sync your phone.** It says the same. Choose **Download from AnkiWeb**.
-8. **Find the card.** On the phone, open Browse and search `tag:mnemonic-added`. Open one of the flag cards, preview it, and show the answer. The "🥨 Mnemonic" box should appear under the country name, with the episode title if there is one.
+8. **Find the card.** On the phone, open Browse and search `tag:mnemonic-added`. Open one of the flag cards, preview it, and show the answer. The "🥨 Mnemonic" box should appear under the country name, with the episode title if there is one and a short line explaining what happens in it.
 9. **Check dark mode.** Switch the phone (or the app) to dark mode and look at the same card. The text should stay readable and the box should be a dim gold instead of cream.
 10. **Check the other cards.** The front of the flag card and the capital and map cards should look exactly as before.
 

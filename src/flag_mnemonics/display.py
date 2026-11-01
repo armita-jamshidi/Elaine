@@ -24,6 +24,7 @@ BOX_STYLE = (
 )
 LABEL_STYLE = "font-weight:bold;font-size:.85em;letter-spacing:.02em;margin-bottom:.3em;opacity:.85"
 EPISODE_STYLE = "margin-top:.4em;font-size:.85em;opacity:.75"
+CONTEXT_STYLE = "margin-top:.2em;font-size:.85em;opacity:.75;font-style:italic"
 IMAGE_STYLE = "display:block;width:100%;max-width:16em;height:auto;margin:.5em auto 0;border-radius:4px"
 
 
@@ -69,11 +70,15 @@ def add_snippet(template_html: str, field_name: str) -> str:
 
 
 def field_html(entry: Mapping[str, Any], image_filename: Optional[str] = None) -> str:
-    """What goes in the Mnemonic field: the mnemonic, the episode, the image."""
+    """What goes in the Mnemonic field: the mnemonic, the episode and what happens in it, the image."""
     parts = [html.escape(str(entry.get("mnemonic", "")).strip())]
     episode = (entry.get("episode_title") or "").strip()
+    context = (entry.get("context") or "").strip()
     if episode:
         parts.append(f'<div style="{EPISODE_STYLE}">📺 Episode: “{html.escape(episode)}”</div>')
+    if context:
+        label = "" if episode else "📺 "
+        parts.append(f'<div style="{CONTEXT_STYLE}">{label}{html.escape(context)}</div>')
     image = image_filename or entry.get("image")
     if image:
         parts.append(f'<img src="{html.escape(image, quote=True)}" alt="" style="{IMAGE_STYLE}">')

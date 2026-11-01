@@ -42,7 +42,11 @@ def show_flag(country: str, request: gr.Request):
     if saved:
         note = saved.get("note") or f"Pre-written ({saved.get('theme', 'Seinfeld')}, {saved.get('model', 'Claude')})."
         mnemonic = logic.Mnemonic(
-            saved["mnemonic"], saved.get("distinguishing_detail", ""), "", saved.get("episode_title")
+            saved["mnemonic"],
+            saved.get("distinguishing_detail", ""),
+            "",
+            saved.get("episode_title"),
+            context=saved.get("context", ""),
         )
         text = logic.render(logic.Result(True, mnemonic), note)
     else:

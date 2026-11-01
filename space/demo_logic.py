@@ -232,6 +232,8 @@ def render(result: Result, source: str) -> str:
     lines = [f"### 🥨 {m.mnemonic}", ""]
     if m.episode_title:
         lines += [f"📺 Episode: “{m.episode_title}”", ""]
+    if m.context:
+        lines += [f"_{m.context}_", ""]
     if m.distinguishing_detail:
         lines += [f"🔎 Key detail: {m.distinguishing_detail}", ""]
     lines.append(f"<sub>{source}</sub>")

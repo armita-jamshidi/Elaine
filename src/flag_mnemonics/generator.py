@@ -33,6 +33,11 @@ EXAMPLE_MNEMONIC = (
     "stubbier, like George. Poland is upside down (white over red), like George in "
     "'The Opposite,' when he does the opposite of every instinct."
 )
+EXAMPLE_CONTEXT = (
+    "In \"The Opposite\" (season 5), George decides every instinct he has ever had is wrong, "
+    "so he starts doing the exact opposite of what he'd normally do. It works: he gets a "
+    "girlfriend and a job with the New York Yankees."
+)
 
 MNEMONIC_SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -45,6 +50,11 @@ MNEMONIC_SCHEMA: dict[str, Any] = {
             "type": "string",
             "description": "Exact title of the real episode referenced, or an empty string if none.",
         },
+        "context": {
+            "type": "string",
+            "description": "One or two sentences explaining the referenced episode, scene, or character trait "
+            "for someone who has never seen it.",
+        },
         "distinguishing_detail": {
             "type": "string",
             "description": "The visual detail that separates this flag from its look-alikes.",
@@ -54,7 +64,7 @@ MNEMONIC_SCHEMA: dict[str, Any] = {
             "description": "Prompt for an original illustration: the flag plus objects from the joke, no people.",
         },
     },
-    "required": ["mnemonic", "episode_title", "distinguishing_detail", "image_prompt"],
+    "required": ["mnemonic", "episode_title", "context", "distinguishing_detail", "image_prompt"],
     "additionalProperties": False,
 }
 
@@ -114,6 +124,8 @@ class Mnemonic:
     distinguishing_detail: str
     image_prompt: str
     episode_title: Optional[str] = None
+    # Plain recap of the episode or trait the mnemonic leans on, for people who don't know it.
+    context: str = ""
     theme: str = ""
     model: str = ""
     warnings: list[str] = field(default_factory=list)
@@ -136,13 +148,17 @@ Rules:
 4. Use your own words. A short nod to a famous line is fine, but never quote more than a few words of actual dialogue.
 5. Avoid confusion with other flags. You'll see mnemonics already written for other flags. Don't give two similar flags similar mnemonics: if a look-alike already uses a character or gag, pick a different one, and make the contrast between the two flags the point.
 6. One to three sentences.
+7. Explain the reference. Assume the reader has never seen {theme}. In context, say in one or two plain sentences what actually happens in the episode or scene you used (who does what, and why it's memorable), or, if you used a character trait rather than an episode, what that character is known for. Explain only what you are sure is true of the real show; if you aren't sure what happens, pick a reference you do know well. Keep the mnemonic itself short; the explanation goes in context.
 
 Here is an example of the kind of mnemonic that works, for the theme Seinfeld. It names the look-alikes, says exactly how they differ (color order, proportions), and ties each difference to something memorable:
 "{EXAMPLE_MNEMONIC}"
+And its context:
+"{EXAMPLE_CONTEXT}"
 
 Reply with JSON only:
 - mnemonic: the mnemonic itself, one to three sentences.
 - episode_title: the exact title of the real episode you referenced, or "" if none.
+- context: one or two sentences explaining that episode, scene, or character trait to someone who has never seen {theme}.
 - distinguishing_detail: one short phrase naming the visual detail that sets this flag apart from its look-alikes.
 - image_prompt: a prompt for an original illustration showing this flag together with objects or places from the joke (for example a diner booth, a puffy shirt, a marble rye). Describe the flag's real colors and layout. Never include any people, actors, or anyone resembling the cast; objects and settings only."""
 
@@ -278,6 +294,9 @@ def parse_mnemonic(data: dict[str, Any], theme: str = "", model: str = "") -> Mn
     sentences = count_sentences(mnemonic)
     if sentences > 3:
         warnings.append(f"Mnemonic has {sentences} sentences (asked for 1 to 3).")
+    context = text("context")
+    if not context:
+        warnings.append("No explanation of the reference given.")
     distinguishing = text("distinguishing_detail")
     if not distinguishing:
         warnings.append("No distinguishing detail given.")
@@ -286,6 +305,7 @@ def parse_mnemonic(data: dict[str, Any], theme: str = "", model: str = "") -> Mn
         distinguishing_detail=distinguishing,
         image_prompt=text("image_prompt"),
         episode_title=text("episode_title") or None,
+        context=context,
         theme=theme,
         model=model,
         warnings=warnings,
@@ -356,6 +376,7 @@ def mock_transport(body: dict[str, Any], api_key: str) -> dict[str, Any]:
     reply = {
         "mnemonic": f"[mock] {country}'s flag walks into Monk's Café and orders the usual.",
         "episode_title": "",
+        "context": "[mock] Monk's Café is the diner where the four friends meet in almost every episode.",
         "distinguishing_detail": f"[mock] what sets {country} apart",
         "image_prompt": f"[mock] the flag of {country} on a diner table",
     }

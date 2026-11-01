@@ -15,6 +15,7 @@ GOOD_JSON = json.dumps(
     {
         "mnemonic": "Jerry's blue blazer is a shade lighter than Chad's.",
         "episode_title": "",
+        "context": "Jerry is the clean-cut one who always dresses neatly.",
         "distinguishing_detail": "lighter blue",
         "image_prompt": "a blazer",
     }
@@ -168,6 +169,18 @@ def test_render():
     out = logic.render(logic.Result(True, m), "source")
     assert "🥨 Text." in out and "The Opposite" in out and "source" in out
     assert logic.render(logic.Result(False, message="nope"), "s") == "⚠️ nope"
+
+
+def test_render_explains_the_episode():
+    m = logic.Mnemonic("Text.", "detail", "", "The Opposite", context="George does the opposite.")
+    out = logic.render(logic.Result(True, m), "source")
+    assert out.index("The Opposite") < out.index("George does the opposite.")
+
+
+def test_pregenerated_examples_explain_their_episode():
+    for entry in logic.load_pregenerated().values():
+        if entry.get("episode_title"):
+            assert entry.get("context")
 
 
 def test_failed_requests_are_given_back():

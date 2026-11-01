@@ -23,12 +23,12 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from flag_mnemonics import display  # noqa: E402
-from flag_mnemonics.generator import EXAMPLE_MNEMONIC  # noqa: E402
+from flag_mnemonics.generator import EXAMPLE_CONTEXT, EXAMPLE_MNEMONIC  # noqa: E402
 
 OUT = ROOT / "docs" / "images" / "demo.gif"
-WIDTH, HEIGHT = 560, 560
+WIDTH, HEIGHT = 560, 660
 
-ENTRY = {"mnemonic": EXAMPLE_MNEMONIC, "episode_title": "The Opposite"}
+ENTRY = {"mnemonic": EXAMPLE_MNEMONIC, "episode_title": "The Opposite", "context": EXAMPLE_CONTEXT}
 
 PAGE = """<!doctype html><meta charset="utf-8"><style>
 body {{ margin:0; background:#e9e9ee; font-family: -apple-system, "Segoe UI", Arial, sans-serif; }}

@@ -53,7 +53,8 @@ class BatchResult:
         lines = [f"{self.reason}: wrote {len(self.written)} mnemonic(s)."]
         for _, country, m in self.written:
             episode = f" (episode: {m.episode_title})" if m.episode_title else ""
-            lines.append(f"\n{country}{episode}\n{m.mnemonic}\nKey detail: {m.distinguishing_detail}")
+            context = f"\nWhat happens: {m.context}" if m.context else ""
+            lines.append(f"\n{country}{episode}\n{m.mnemonic}{context}\nKey detail: {m.distinguishing_detail}")
             lines.extend(f"  warning: {w}" for w in m.warnings)
         if self.failed:
             lines.append(f"\n{len(self.failed)} failed:")
