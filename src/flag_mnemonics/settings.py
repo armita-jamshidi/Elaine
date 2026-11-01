@@ -92,7 +92,7 @@ class Settings:
         return self.huggingface_api_key or os.environ.get("HF_TOKEN", "")
 
     def summary(self) -> str:
-        """Short human-readable summary, used by the Hello menu item."""
+        """Short human-readable summary, shown by Tools > About Flag Mnemonics."""
         claude = "set" if self.resolved_claude_key() else "missing"
         hf = "set" if self.resolved_hf_key() else "missing"
         return "\n".join(

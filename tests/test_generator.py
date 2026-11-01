@@ -39,6 +39,7 @@ def reply(payload, **extra):
 GOOD = {
     "mnemonic": "Poland is white over red, the opposite of Indonesia, like George in 'The Opposite.'",
     "episode_title": "The Opposite",
+    "context": "George does the opposite of every instinct, and his life goes great.",
     "distinguishing_detail": "white on top",
     "image_prompt": "A white-over-red flag beside a diner booth",
 }
@@ -57,6 +58,8 @@ def test_system_prompt_contains_all_rules_and_example():
         "your own words",
         "Avoid confusion with other flags",
         "One to three sentences",
+        "Explain the reference",
+        "never seen Seinfeld",
         "Never include any people",
     ]:
         assert phrase in prompt
@@ -124,7 +127,7 @@ def test_svg_is_sent_as_text_not_image():
 
 def test_schema_requires_every_field():
     schema = generator.MNEMONIC_SCHEMA
-    assert set(schema["required"]) == {"mnemonic", "episode_title", "distinguishing_detail", "image_prompt"}
+    assert set(schema["required"]) == {"mnemonic", "episode_title", "context", "distinguishing_detail", "image_prompt"}
     assert schema["additionalProperties"] is False
 
 
@@ -138,6 +141,22 @@ def test_parse_good_response():
     assert m.distinguishing_detail == "white on top"
     assert m.model == "claude-opus-5-5" and m.theme == "Seinfeld"
     assert m.warnings == []
+
+
+def test_context_is_parsed():
+    m = parse_response(reply(GOOD))
+    assert m.context == GOOD["context"]
+    assert m.to_dict()["context"] == GOOD["context"]
+
+
+def test_missing_context_is_a_warning_not_a_failure():
+    m = parse_response(reply({**GOOD, "context": " "}))
+    assert m.context == ""
+    assert "No explanation of the reference given." in m.warnings
+
+
+def test_prompt_example_includes_its_context():
+    assert generator.EXAMPLE_CONTEXT in build_system_prompt("Seinfeld")
 
 
 def test_empty_episode_title_becomes_none():
@@ -277,3 +296,12 @@ def test_generator_has_no_anki_imports():
     }
     assert not imported & {"aqt", "anki", "PyQt6"}
     assert all(m in {"__future__", "base64", "json", "re", "time", "urllib", "dataclasses", "typing"} for m in imported), imported
+
+
+def test_regenerate_mentions_the_mnemonic_being_replaced():
+    from flag_mnemonics.generator import FlagInput, build_user_text
+
+    text = build_user_text(FlagInput("Poland", previous="Kramer bursts in."), [])
+    assert "didn't stick: Kramer bursts in." in text
+    assert "different scene" in text
+    assert "didn't stick" not in build_user_text(FlagInput("Poland"), [])

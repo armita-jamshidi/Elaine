@@ -43,7 +43,7 @@ python scripts/link_dev.py ~/AnkiDev
 
 This symlinks `src/flag_mnemonics` into `~/AnkiDev/addons21/flag_mnemonics`, so edits in the repo show up after an Anki restart. The script refuses to link into your real Anki data folder. On Windows, symlinks need Developer Mode turned on (Settings > For developers), or run the terminal as administrator.
 
-**6. Check it loaded.** Start Anki with the dev folder again (step 2). Tools > "Hello from Flag Mnemonics" should show a greeting and the settings it loaded. Tools > Add-ons > Flag Mnemonics > Config opens `config.json` with `config.md` beside it.
+**6. Check it loaded.** Start Anki with the dev folder again (step 2). Tools > "About Flag Mnemonics" should show the settings it loaded. Tools > Add-ons > Flag Mnemonics > Config opens `config.json` with `config.md` beside it.
 
 ## Making some flags "struggle" for testing
 
@@ -78,10 +78,44 @@ ANTHROPIC_API_KEY=sk-ant-... python scripts/sample_mnemonics.py --out samples.md
 python scripts/sample_mnemonics.py --theme "The Office" Poland Indonesia Monaco
 ```
 
+## Trying the stage 6 actions
+
+In the dev copy, with `"use_mock_api": true` (free) or a real key:
+
+1. **Batch:** make a few flags struggle (see above), then Tools > "Generate mnemonics for struggling flags". A progress window counts through the flags ("Writing mnemonic 2 of 5: Chad"), then a summary lists what was written. Automatic runs (startup, after sync, after Again) don't show this window and stay in the background.
+2. **Regenerate:** in the Browser, select one or more flag notes, right-click > "Regenerate mnemonic". The old mnemonic is replaced, and Claude is told it didn't stick so the new one uses a different scene.
+3. **Remove:** select notes, right-click > "Remove mnemonic", confirm. The Mnemonic field is emptied, the `mnemonic-added` tag is removed, and the saved copy is deleted. Nothing else on the note changes.
+4. **Overlay mode:** set `"storage_mode": "overlay"` in the config and restart. Review or preview a flag card that has a mnemonic: the 🥨 box shows on the answer side. The note type doesn't get a field (in a fresh dev copy), and the notes are only tagged. If a card already shows the box from field mode, overlay mode doesn't add a second one. Switch back to `"field"` afterwards.
+
+Selections that include other note types are fine: those notes are skipped.
+
+## Trying illustrations (stage 7)
+
+1. Set `"images_enabled": true`. With `"use_mock_api": true` every picture is a 1×1 placeholder, which is enough to check the plumbing. For real pictures, set `use_mock_api` to `false` and add `huggingface_api_key` (a "Read" token from https://huggingface.co/settings/tokens with "Make calls to Inference Providers" ticked). Real pictures also need a Claude key, since the picture is drawn from the mnemonic's image prompt.
+2. Make a flag struggle, or right-click a flag note in the Browser > "Regenerate mnemonic". The picture appears under the mnemonic in the 🥨 box, and the file `flagmnem_<note id>_<hash>.png` is in the profile's `collection.media` folder.
+3. Regenerate again: the new picture replaces the old one, and the old file goes to Anki's media trash. "Remove mnemonic" deletes the picture too. The add-on only ever deletes `flagmnem_*` files.
+4. Without a token, you get one warning per session explaining how to add it, and mnemonics are still written without pictures. If Hugging Face fails for one flag, that mnemonic is kept and the summary says which pictures are missing.
+
+The request is the one `huggingface_hub.InferenceClient(provider="nscale").text_to_image(prompt, model="black-forest-labs/FLUX.1-schnell")` makes, sent with `urllib` because add-ons can't install packages. If nscale doesn't take it, hf-inference is tried.
+
+## Simulating an Ultimate Geography upgrade
+
+Ultimate Geography upgrades go through CrowdAnki, which resets the note type's templates and styling, can drop fields the deck doesn't define (and their content), and can rewrite tags. The add-on keeps every mnemonic in `user_files/mnemonics.json`, so it can put everything back. To try it in the dev copy, once a few flags have mnemonics on their cards:
+
+1. **Reset the template:** Tools > Manage Note Types > Ultimate Geography > Cards. Pick "Flag - Country", open the Back Template, and delete everything from `<!-- flag-mnemonics:start -->` to `<!-- flag-mnemonics:end -->`. Save.
+2. **Drop the field:** in the same window, Fields > select "Mnemonic" > Delete. This also deletes its content from every note.
+3. **Rewrite tags:** in the Browser, search `tag:mnemonic-added`, select all, then Notes > Remove Tags > `mnemonic-added`.
+4. **Restart Anki.** The add-on asks to re-add the field (with the full-sync steps). Click Yes. A report then lists what it repaired: the field, the box on "Flag - Country", and how many mnemonics it restored.
+5. **Check:** preview a flag card; the 🥨 box is back. The Browser search `tag:mnemonic-added` finds them all again.
+
+Only the template step (1) needs no question, since it isn't a schema change. You can also run the same check any time with Tools > "Repair mnemonics after deck upgrade". On startup, the check stays silent when nothing is wrong.
+
+If you use CrowdAnki for the real deck, you can test the real thing in the dev copy: import Ultimate Geography with CrowdAnki, generate a few mnemonics, then import it again from a newer release.
+
 ## Where things live
 
 - The add-on's log is in the dev data folder under `logs/addons/flag_mnemonics/`.
 
 - Your edited settings (including API keys) are saved by Anki to `addons21/flag_mnemonics/meta.json`. Through the symlink, that file sits in `src/flag_mnemonics/`, and `.gitignore` keeps it out of git.
-- The add-on's own data goes in `src/flag_mnemonics/user_files/`, also ignored by git. Anki preserves this folder across add-on updates.
+- The add-on's own data goes in `src/flag_mnemonics/user_files/`, also ignored by git: `mnemonics.json` (every mnemonic, keyed by note ID, with the note's GUID as a fallback) and `backups/` (a copy of the note type from before each change). Anki preserves this folder across add-on updates.
 - Errors from the add-on appear in Anki's error dialog. The debug console (Tools > Debug Console, or Ctrl/Cmd+Shift+;) is handy for poking at `mw.col`.

@@ -102,6 +102,7 @@ def main() -> None:
         print(f"  Look-alikes: {flag.flag_similarity or '(none listed)'}")
         print(f"  Mnemonic: {m.mnemonic}")
         print(f"  Episode: {m.episode_title or '(none)'}")
+        print(f"  What happens: {m.context or '(none)'}")
         print(f"  Key detail: {m.distinguishing_detail}")
         print(f"  Image prompt: {m.image_prompt}")
         for w in m.warnings:
@@ -113,6 +114,7 @@ def main() -> None:
             "",
             f"- Look-alikes (from the deck): {flag.flag_similarity or 'none listed'}",
             f"- Episode: {m.episode_title or 'none'}",
+            f"- What happens: {m.context or 'none'}",
             f"- Key detail: {m.distinguishing_detail}",
             f"- Image prompt: {m.image_prompt}",
             "",

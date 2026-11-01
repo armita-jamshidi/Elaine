@@ -15,6 +15,8 @@ ADDON_DIR = Path(__file__).resolve().parent.parent / "src" / "flag_mnemonics"
 def _install_fake_aqt() -> None:
     aqt = types.ModuleType("aqt")
     aqt.mw = MagicMock(name="mw")
+    # Progress updates from worker threads go through taskman; run them now.
+    aqt.mw.taskman.run_on_main.side_effect = lambda closure: closure()
     aqt.mw.addonManager.getConfig.return_value = json.loads(
         (ADDON_DIR / "config.json").read_text(encoding="utf-8")
     )
@@ -27,7 +29,13 @@ def _install_fake_aqt() -> None:
     utils.askUser = MagicMock(name="askUser", return_value=True)
 
     gui_hooks = types.ModuleType("aqt.gui_hooks")
-    for hook in ("profile_did_open", "sync_did_finish", "reviewer_did_answer_card"):
+    for hook in (
+        "profile_did_open",
+        "sync_did_finish",
+        "reviewer_did_answer_card",
+        "card_will_show",
+        "browser_will_show_context_menu",
+    ):
         setattr(gui_hooks, hook, [])
 
     operations = types.ModuleType("aqt.operations")
@@ -73,6 +81,10 @@ class FakeQueryOp:
 
     def failure(self, callback):
         self.on_failure = callback
+        return self
+
+    def with_progress(self, label=None):
+        self.progress_label = label or True
         return self
 
     def without_collection(self):
