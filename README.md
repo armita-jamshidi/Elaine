@@ -6,12 +6,6 @@ An Anki desktop add-on that writes themed mnemonics (Seinfeld by default) for th
 
 **Published on [AnkiWeb](https://ankiweb.net/shared/info/1050900423)** (add-on code `1050900423`).
 
-## Try it in your browser
-
-`space/` is a small Hugging Face Space demo: pick a look-alike flag, pick a theme, and get a mnemonic from a free open model (a few per day) or from Claude with your own key. It isn't online yet; [space/DEPLOY.md](space/DEPLOY.md) has the steps. It starts private.
-
-![The demo Space](docs/images/space.png)
-
 ## Install
 
 1. **Back up your collection first.** In Anki: File > Export > "Anki Collection Package (.colpkg)", tick "Include media", and keep the file somewhere safe. Also sync, so AnkiWeb has your latest reviews.
@@ -97,7 +91,7 @@ scripts/make_demo_gif.py      renders docs/images/demo.gif with the add-on's own
 docs/DEVELOPMENT.md   dev setup, test profile, Python version
 docs/PHONE_CHECK.md   checking a mnemonic on AnkiMobile or AnkiDroid
 docs/ANKIWEB.md       listing text and steps for sharing on AnkiWeb (optional)
-space/                Hugging Face Space demo (Gradio); see space/DEPLOY.md
+space/                Gradio demo, not deployed (runs locally: python space/app.py); see space/DEPLOY.md
 ```
 
 ## Why no Anthropic SDK?
