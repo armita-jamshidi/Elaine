@@ -1,5 +1,7 @@
 # Deploying the demo Space
 
+**Not deployed.** Hugging Face now requires a PRO subscription to host Gradio Spaces, even on free CPU hardware (only static Spaces are free), so the demo isn't online. It still runs locally with `python app.py`. The steps below apply if that changes or you subscribe.
+
 Nothing has been deployed. These are the steps for you, under your Hugging Face account. **Create it as a private Space.** Making it public is a separate decision.
 
 ## 1. Before deploying (on your computer)

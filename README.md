@@ -4,19 +4,13 @@ An Anki desktop add-on that writes themed mnemonics (Seinfeld by default) for th
 
 ![Demo: a Poland flag card flips to its answer, and a Seinfeld mnemonic appears in a 🥨 box](docs/images/demo.gif)
 
-Status: feature-complete and in testing. Not on AnkiWeb yet; install it from a `.ankiaddon` file.
-
-## Try it in your browser
-
-`space/` is a small Hugging Face Space demo: pick a look-alike flag, pick a theme, and get a mnemonic from a free open model (a few per day) or from Claude with your own key. It isn't online yet; [space/DEPLOY.md](space/DEPLOY.md) has the steps. It starts private.
-
-![The demo Space](docs/images/space.png)
+**Published on [AnkiWeb](https://ankiweb.net/shared/info/1050900423)** (add-on code `1050900423`).
 
 ## Install
 
 1. **Back up your collection first.** In Anki: File > Export > "Anki Collection Package (.colpkg)", tick "Include media", and keep the file somewhere safe. Also sync, so AnkiWeb has your latest reviews.
-2. **Get the add-on file.** Download `flag-mnemonics-ankiaddon` from the latest green [tests run](https://github.com/armita-jamshidi/Elaine/actions/workflows/tests.yml) on `main` (under Artifacts, unzip it), or build it yourself with `python scripts/package.py` (it appears in `dist/`).
-3. **Install it.** Double-click `flag_mnemonics-0.1.0.ankiaddon`, or in Anki: Tools > Add-ons > Install from file. Restart Anki.
+2. **Install it from AnkiWeb.** In Anki: Tools > Add-ons > Get Add-ons, paste the code `1050900423`, click OK, and restart Anki. ([Add-on page](https://ankiweb.net/shared/info/1050900423))
+3. **Or from a file** (for development builds): build it with `python scripts/package.py` (it appears in `dist/`), or download `flag-mnemonics-ankiaddon` from the latest green [tests run](https://github.com/armita-jamshidi/Elaine/actions/workflows/tests.yml) on `main`. Then Tools > Add-ons > Install from file, and restart Anki.
 4. **Add your Claude API key.** Get one at https://console.anthropic.com, then Tools > Add-ons > Flag Mnemonics > Config, and paste it into `claude_api_key`. The key stays on your computer (in the add-on's `meta.json`) and is only sent to Anthropic.
 5. **Optional:** change `theme` (any show, book or film you know well), turn on `images_enabled` and add `huggingface_api_key` for pictures. Every setting is explained next to the config.
 
@@ -97,7 +91,7 @@ scripts/make_demo_gif.py      renders docs/images/demo.gif with the add-on's own
 docs/DEVELOPMENT.md   dev setup, test profile, Python version
 docs/PHONE_CHECK.md   checking a mnemonic on AnkiMobile or AnkiDroid
 docs/ANKIWEB.md       listing text and steps for sharing on AnkiWeb (optional)
-space/                Hugging Face Space demo (Gradio); see space/DEPLOY.md
+space/                Gradio demo, not deployed (runs locally: python space/app.py); see space/DEPLOY.md
 ```
 
 ## Why no Anthropic SDK?

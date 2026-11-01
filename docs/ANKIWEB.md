@@ -1,6 +1,6 @@
 # Sharing Flag Mnemonics on AnkiWeb (optional)
 
-Nothing here has been published. Uploading is done by you, under your own AnkiWeb account, whenever you're happy with the add-on. Until then, the `.ankiaddon` file from `scripts/package.py` (or from the CI run's artifacts) is enough to install it on your own computer.
+**Published:** <https://ankiweb.net/shared/info/1050900423> (code `1050900423`), version 0.1.0, supporting Anki 23.10 to 26.9. Uploads are done by you, under your own AnkiWeb account. The rest of this page is the checklist and listing used for that upload, kept for future updates.
 
 ## Before you upload
 
@@ -34,6 +34,8 @@ I couldn't open the upload form from here (it needs your login), so field names 
 **Title:** Flag Mnemonics: Seinfeld (or any show) mnemonics for flags you keep forgetting
 
 **Tags:** `geography flags mnemonics ultimate-geography ai claude`
+
+**Branch 1 supports:** `23.10` to `26.9` (no `-` prefix, so newer versions can still download it).
 
 **Support page:** https://github.com/armita-jamshidi/Elaine/issues
 
