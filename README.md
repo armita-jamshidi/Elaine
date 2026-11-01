@@ -90,6 +90,7 @@ scripts/package.py    builds dist/flag_mnemonics-<version>.ankiaddon
 scripts/make_demo_gif.py      renders docs/images/demo.gif with the add-on's own box
 docs/DEVELOPMENT.md   dev setup, test profile, Python version
 docs/PHONE_CHECK.md   checking a mnemonic on AnkiMobile or AnkiDroid
+docs/ANKIWEB.md       listing text and steps for sharing on AnkiWeb (optional)
 ```
 
 ## Why no Anthropic SDK?
