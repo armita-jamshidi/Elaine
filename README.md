@@ -173,7 +173,7 @@ Needs Anki 23.10 or newer and the Ultimate Geography deck (any language; the not
 ### Develop it
 
 ```bash
-git clone https://github.com/armita-jamshidi/Elaine && cd Elaine
+git clone https://github.com/armita-jamshidi/yada-yada-flags && cd yada-yada-flags
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
 pytest                                   # Anki-backend tests run when `anki` is installed

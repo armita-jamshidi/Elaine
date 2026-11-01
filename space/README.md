@@ -14,7 +14,7 @@ short_description: Themed mnemonics for look-alike flags (Seinfeld by default)
 
 Pick a flag you keep mixing up (Poland, Indonesia or Monaco? Chad or Romania?) and get a one-to-three-sentence mnemonic, themed on a show you know, that encodes what the flag actually looks like and what sets it apart from its look-alikes.
 
-This is a demo of the [Flag Mnemonics Anki add-on](https://github.com/armita-jamshidi/Elaine), which writes these automatically for the flags you keep forgetting in the Ultimate Geography deck and syncs them to AnkiMobile and AnkiDroid.
+This is a demo of the [Flag Mnemonics Anki add-on](https://github.com/armita-jamshidi/yada-yada-flags), which writes these automatically for the flags you keep forgetting in the Ultimate Geography deck and syncs them to AnkiMobile and AnkiDroid.
 
 ## Who writes the mnemonic
 
