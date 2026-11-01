@@ -70,6 +70,13 @@ class MnemonicStore:
         self.save()
         return entry
 
+    def set_image(self, note_id: int, filename: str) -> None:
+        """Record the illustration's media filename for a stored mnemonic."""
+        entry = self.entries.get(str(note_id))
+        if entry is not None:
+            entry["image"] = filename
+            self.save()
+
     def get(self, note_id: int) -> Optional[dict[str, Any]]:
         return self.entries.get(str(note_id))
 

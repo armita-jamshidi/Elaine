@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any, Callable, Iterable
 
-from . import storage
+from . import images, storage
 from .field_mode import FieldMode
 from .pipeline import BatchResult, Pipeline
 from .settings import Settings
@@ -44,10 +44,19 @@ def regenerate_inputs(col: Any, settings: Settings, note_ids: Iterable[int]) -> 
 
 
 def remove_mnemonics(col: Any, settings: Settings, store: storage.MnemonicStore, note_ids: Iterable[int]) -> list[Any]:
-    """Forget the stored mnemonics and return the notes to save (field cleared, tag removed)."""
+    """Forget the stored mnemonics and return the notes to save (field cleared, tag removed).
+
+    Their illustrations (flagmnem_* files) are deleted from the media folder.
+    """
     note_ids = list(note_ids)
+    pictures = []
     for note_id in note_ids:
+        picture = (store.get(note_id) or {}).get("image")
+        if picture and images.is_addon_file(picture):
+            pictures.append(picture)
         store.remove(note_id)
+    if pictures:
+        col.media.trash_files(pictures)
     return storage.notes_to_clear(col, settings, note_ids)
 
 
@@ -114,8 +123,8 @@ class BrowserActions:
         stored = [n for n in note_ids if n in self.generation.store]
         message = (
             f"Remove the mnemonic from {len(note_ids)} note(s)? This deletes "
-            f"{len(stored)} saved mnemonic(s), empties the Mnemonic field and removes the "
-            f"{storage.MNEMONIC_TAG} tag. Other fields aren't touched.\n\n"
+            f"{len(stored)} saved mnemonic(s) and their illustrations, empties the Mnemonic field and "
+            f"removes the {storage.MNEMONIC_TAG} tag. Other fields aren't touched.\n\n"
             "A flag you keep forgetting will get a new mnemonic the next time it's found."
         )
         if not askUser(message, parent=browser, title=TITLE, defaultno=True):

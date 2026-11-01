@@ -24,7 +24,7 @@ BOX_STYLE = (
 )
 LABEL_STYLE = "font-weight:bold;font-size:.85em;letter-spacing:.02em;margin-bottom:.3em;opacity:.85"
 EPISODE_STYLE = "margin-top:.4em;font-size:.85em;opacity:.75"
-IMAGE_STYLE = "display:block;max-width:100%;height:auto;margin-top:.5em;border-radius:4px"
+IMAGE_STYLE = "display:block;width:100%;max-width:16em;height:auto;margin:.5em auto 0;border-radius:4px"
 
 
 def box_html(inner_html: str) -> str:

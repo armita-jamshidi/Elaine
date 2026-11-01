@@ -89,6 +89,15 @@ In the dev copy, with `"use_mock_api": true` (free) or a real key:
 
 Selections that include other note types are fine: those notes are skipped.
 
+## Trying illustrations (stage 7)
+
+1. Set `"images_enabled": true`. With `"use_mock_api": true` every picture is a 1×1 placeholder, which is enough to check the plumbing. For real pictures, set `use_mock_api` to `false` and add `huggingface_api_key` (a "Read" token from https://huggingface.co/settings/tokens with "Make calls to Inference Providers" ticked). Real pictures also need a Claude key, since the picture is drawn from the mnemonic's image prompt.
+2. Make a flag struggle, or right-click a flag note in the Browser > "Regenerate mnemonic". The picture appears under the mnemonic in the 🥨 box, and the file `flagmnem_<note id>_<hash>.png` is in the profile's `collection.media` folder.
+3. Regenerate again: the new picture replaces the old one, and the old file goes to Anki's media trash. "Remove mnemonic" deletes the picture too. The add-on only ever deletes `flagmnem_*` files.
+4. Without a token, you get one warning per session explaining how to add it, and mnemonics are still written without pictures. If Hugging Face fails for one flag, that mnemonic is kept and the summary says which pictures are missing.
+
+The request is the one `huggingface_hub.InferenceClient(provider="nscale").text_to_image(prompt, model="black-forest-labs/FLUX.1-schnell")` makes, sent with `urllib` because add-ons can't install packages. If nscale doesn't take it, hf-inference is tried.
+
 ## Simulating an Ultimate Geography upgrade
 
 Ultimate Geography upgrades go through CrowdAnki, which resets the note type's templates and styling, can drop fields the deck doesn't define (and their content), and can rewrite tags. The add-on keeps every mnemonic in `user_files/mnemonics.json`, so it can put everything back. To try it in the dev copy, once a few flags have mnemonics on their cards:
