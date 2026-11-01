@@ -60,7 +60,23 @@ for country in countries:
 print("done")
 ```
 
-Then use Tools > "Find struggling flags (log only)". It should list those five countries and show the exact search it ran. Restarting Anki or syncing runs the same search automatically and shows a short tooltip. Pressing Again on a flag card that reaches 3 lapses during a desktop review is logged too.
+Then use Tools > "Generate mnemonics for struggling flags". It finds those five countries, writes a mnemonic for each in the background, and shows them in a dialog. Restarting Anki, syncing, or pressing Again on a flag card that reaches 3 lapses does the same thing automatically, with a short tooltip instead of a dialog.
+
+## Generating mnemonics
+
+- **Without an API key:** set `"use_mock_api": true` in the add-on config. Every mnemonic is a placeholder starting with `[mock]`, so you can test the whole flow for free.
+- **With Claude:** set `claude_api_key` in the add-on config (Tools > Add-ons > Flag Mnemonics > Config) and `use_mock_api` back to `false`. The key stays in `meta.json`, which git ignores.
+- Mnemonics are saved to `user_files/mnemonics.json`, keyed by note ID. A note that already has an entry isn't regenerated. To start over in the dev copy, delete that file.
+- In field mode (the default), the first time it writes a mnemonic the add-on asks to add a "Mnemonic" field to the note type, and it adds a small box to the back of the flag templates. Before changing the note type it saves a copy to `user_files/backups/`. After that, mnemonics are copied into the field and the notes are tagged `mnemonic-added`. In the dev copy, check the result in the Browser (the Mnemonic field) and by reviewing or previewing a flag card.
+- Adding a field means the next sync is a full sync. The dev copy isn't signed in, so that doesn't matter there; see [PHONE_CHECK.md](PHONE_CHECK.md) for doing it on your real profile.
+
+To judge quality without Anki, generate the five sample flags from the command line:
+
+```bash
+pip install PyQt6   # optional: renders the SVG flags to PNG, as Anki does
+ANTHROPIC_API_KEY=sk-ant-... python scripts/sample_mnemonics.py --out samples.md
+python scripts/sample_mnemonics.py --theme "The Office" Poland Indonesia Monaco
+```
 
 ## Where things live
 

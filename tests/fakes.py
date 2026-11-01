@@ -46,9 +46,18 @@ class FakeDecks:
         return self.names[did]
 
 
+class FakeMedia:
+    def __init__(self, directory):
+        self.directory = directory
+
+    def dir(self):
+        return self.directory
+
+
 class FakeCollection:
-    def __init__(self, cards, decks=None, search_results=None):
+    def __init__(self, cards, decks=None, search_results=None, media_dir=""):
         self.cards = {c.id: c for c in cards}
+        self.media = FakeMedia(media_dir)
         self.decks = FakeDecks(decks or {1: "Ultimate Geography"})
         self.search_results = search_results
         self.queries = []
@@ -62,10 +71,13 @@ class FakeCollection:
     def get_card(self, cid):
         return self.cards[cid]
 
+    def get_note(self, nid):
+        return next(c.note() for c in self.cards.values() if c.note().id == nid)
 
-def ug_note(nid, country, tags=()):
+
+def ug_note(nid, country, tags=(), similarity=""):
     return FakeNote(
         nid,
-        {"Country": country, "Flag": f'<img src="ug-flag-{country.lower()}.svg">', "Flag similarity": ""},
+        {"Country": country, "Flag": f'<img src="ug-flag-{country.lower()}.svg">', "Flag similarity": similarity},
         tags=tags,
     )
