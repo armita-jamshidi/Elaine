@@ -1,4 +1,4 @@
-# Elaine: Flag Mnemonics for Anki
+# Yada Yada Flags: Flag Mnemonics for Anki
 
 <p align="center">
   <img src="docs/images/seinfeld-cover.jpg" alt="The Seinfeld logo above Kramer, George, Elaine and Jerry" width="320">
@@ -10,7 +10,7 @@
 
 <p align="center">In Anki: <b>Tools &gt; Add-ons &gt; Get Add-ons</b>, then paste the code <code>1050900423</code>.</p>
 
-<p align="center"><i>Keep mixing up Poland, Indonesia and Monaco? So did George. Elaine writes you a Seinfeld joke about it.</i></p>
+<p align="center"><i>Keep mixing up Poland, Indonesia and Monaco? So did George. Yada Yada Flags writes you a Seinfeld joke about it.</i></p>
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![Anki](https://img.shields.io/badge/Anki-23.10%E2%80%9326.9-235390)
@@ -18,7 +18,7 @@
 ![LLM](https://img.shields.io/badge/LLM-Anthropic%20Claude-D97757)
 ![AnkiWeb](https://img.shields.io/badge/AnkiWeb-1050900423-4C9BE8)
 
-Elaine is an Anki desktop add-on for the [Ultimate Geography](https://github.com/anki-geo/ultimate-geography) deck. When you've forgotten a flag card 3 or more times, it asks Claude for a short Seinfeld-themed mnemonic that encodes what the flag actually looks like and how it differs from its look-alikes, plus a plain explanation of the episode it references, for anyone who hasn't seen the show. The mnemonic is written into the card itself, so it syncs to AnkiMobile and AnkiDroid. The theme is a setting: any show, book or film you know well works.
+Yada Yada Flags is an Anki desktop add-on for the [Ultimate Geography](https://github.com/anki-geo/ultimate-geography) deck. When you've forgotten a flag card 3 or more times, it asks Claude for a short Seinfeld-themed mnemonic that encodes what the flag actually looks like and how it differs from its look-alikes, plus a plain explanation of the episode it references, for anyone who hasn't seen the show. The mnemonic is written into the card itself, so it syncs to AnkiMobile and AnkiDroid. The theme is a setting: any show, book or film you know well works.
 
 ## What it looks like
 
