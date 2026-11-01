@@ -67,6 +67,8 @@ Then use Tools > "Generate mnemonics for struggling flags". It finds those five 
 - **Without an API key:** set `"use_mock_api": true` in the add-on config. Every mnemonic is a placeholder starting with `[mock]`, so you can test the whole flow for free.
 - **With Claude:** set `claude_api_key` in the add-on config (Tools > Add-ons > Flag Mnemonics > Config) and `use_mock_api` back to `false`. The key stays in `meta.json`, which git ignores.
 - Mnemonics are saved to `user_files/mnemonics.json`, keyed by note ID. A note that already has an entry isn't regenerated. To start over in the dev copy, delete that file.
+- In field mode (the default), the first time it writes a mnemonic the add-on asks to add a "Mnemonic" field to the note type, and it adds a small box to the back of the flag templates. Before changing the note type it saves a copy to `user_files/backups/`. After that, mnemonics are copied into the field and the notes are tagged `mnemonic-added`. In the dev copy, check the result in the Browser (the Mnemonic field) and by reviewing or previewing a flag card.
+- Adding a field means the next sync is a full sync. The dev copy isn't signed in, so that doesn't matter there; see [PHONE_CHECK.md](PHONE_CHECK.md) for doing it on your real profile.
 
 To judge quality without Anki, generate the five sample flags from the command line:
 

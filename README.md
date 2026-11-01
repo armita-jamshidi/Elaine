@@ -2,7 +2,9 @@
 
 An Anki desktop add-on that writes themed mnemonics (Seinfeld by default) for the flag cards you keep forgetting. Each mnemonic encodes what the flag actually looks like and how it differs from its look-alikes, and it's written into the card itself so it syncs to AnkiMobile and AnkiDroid.
 
-Status: early development (stage 3 of 10: finds struggling flag cards and writes mnemonics with Claude; they're saved but not on your cards yet).
+Status: early development (stage 4 of 10: writes mnemonics with Claude and puts them on your flag cards so they sync to your phone).
+
+![The mnemonic box on the back of a flag card](docs/images/mnemonic-box-light.png)
 
 ## Repo layout
 
@@ -17,12 +19,15 @@ src/flag_mnemonics/   the add-on (symlink this into a dev Anki, see docs/DEVELOP
   generator.py        prompt, Claude API call (urllib), JSON parsing; stdlib only
   media.py            reads the flag image; renders SVG flags to PNG with Qt
   pipeline.py         runs generation in the background
-  storage.py          user_files/mnemonics.json, the source of truth
-  display.py, images.py   later stages
+  storage.py          user_files/mnemonics.json (source of truth) and the Mnemonic field
+  display.py          the answer-side mnemonic box and field HTML
+  field_mode.py       one-time note type setup, writing to cards, sync reminder
+  images.py           later stage
 tests/                pytest, with Anki mocked (plus one test file on a real Anki backend)
 scripts/link_dev.py   symlinks the add-on into a dev Anki data folder
 scripts/sample_mnemonics.py   generates sample mnemonics outside Anki
 docs/DEVELOPMENT.md   dev setup, test profile, Python version
+docs/PHONE_CHECK.md   checking a mnemonic on AnkiMobile or AnkiDroid
 ```
 
 ## Why no Anthropic SDK?

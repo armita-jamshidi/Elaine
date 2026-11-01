@@ -19,8 +19,7 @@ from dataclasses import dataclass
 from typing import Any, Callable, Iterable, Sequence
 
 from .settings import Settings
-
-MNEMONIC_TAG = "mnemonic-added"
+from .storage import MNEMONIC_TAG
 AGAIN = 1
 
 
